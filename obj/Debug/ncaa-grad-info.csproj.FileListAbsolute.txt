@@ -1,0 +1,12 @@
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\obj\Debug\ncaa-grad-info.csprojAssemblyReference.cache
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\obj\Debug\ncaa-grad-info.csproj.CoreCompileInputs.cache
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\bin\Debug\ncaa-grad-info.exe.config
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\bin\Debug\ncaa-grad-info.exe
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\bin\Debug\ncaa-grad-info.pdb
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\bin\Debug\Newtonsoft.Json.dll
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\bin\Debug\Newtonsoft.Json.pdb
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\bin\Debug\Newtonsoft.Json.xml
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\obj\Debug\ncaa-grad-info.csproj.CopyComplete
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\obj\Debug\ncaa-grad-info.exe
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\obj\Debug\ncaa-grad-info.pdb
+D:\projects\csharp\ncaa-grad-info\ncaa-grad-info\ncaa-grad-info\bin\Debug\ncaadata.csv
