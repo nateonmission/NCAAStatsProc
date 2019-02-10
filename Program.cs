@@ -38,12 +38,12 @@ namespace ncaa_grad_info
 
             if (choice == "1")
             {
-                DisplayStatsFootball();
+                DisplayMenuFootball();
                 return 1;
             }
             else if (choice == "2")
             {
-                DisplayStatsPrimary();
+                DisplayMenuPrimary();
                 return 1;
             }
             else if (choice == "9")
@@ -58,30 +58,38 @@ namespace ncaa_grad_info
 
         }
 
-        public static int DisplayStatsFootball()
+        public static int DisplayMenuFootball()
         {
             Console.Clear();
             PrintLn("********************* Football Conf. Menu **********************");
-            PrintSubMenu(GetField(5));
+            List<string> footballConfList = PrintSubMenu(GetField(5));
+            int maxValue = footballConfList.Count();
             PrintLn("Enter the number of your selection or 'B' to return to the main menu." + "\r\n");
             string footballConfSelection = Console.ReadLine();
-            PrintLn(footballConfSelection);
-            if(footballConfSelection.ToUpper() == "B")
+            Int32.TryParse(footballConfSelection, out int number);
+            if (footballConfSelection.ToUpper() == "B")
             {
                 return 0;
             }
-            else if(Int32.TryParse(footballConfSelection, out int number))
+
+            else if(number <= maxValue && number > 0)
             {
-                GetColleges(number);
+                PrintLn(footballConfList.ElementAt(number - 1));
+                string selectedConf = footballConfList.ElementAt(number - 1);
+                Console.ReadKey();
+                return 0;
             }
             else
             {
-                return 2;
+                PrintLn("I do not understand. Let's try that again...");
+                PrintLn("Press any key to continue");
+                Console.ReadKey();
+                return 0;
             }
                    
         }
 
-        public static void DisplayStatsPrimary()
+        public static void DisplayMenuPrimary()
         {
             Console.Clear();
             PrintLn("********************* Primanry Conf. Menu **********************");
@@ -138,7 +146,7 @@ namespace ncaa_grad_info
 
         }
 
-        public static void PrintSubMenu(List<string> fieldValues)
+        public static List<string> PrintSubMenu(List<string> fieldValues)
         {
             int count = 1;
             foreach (string fieldValue in fieldValues)
@@ -153,6 +161,8 @@ namespace ncaa_grad_info
                 }
                 count++;
             }
+
+            return fieldValues;
         }
 
 
