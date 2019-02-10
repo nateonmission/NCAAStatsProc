@@ -13,8 +13,6 @@ namespace ncaa_grad_info
     {
         static void Main(string[] args)
         {
-
-
             int again = 1;
             while (again == 1)
             {
@@ -60,21 +58,34 @@ namespace ncaa_grad_info
 
         }
 
-        public static void DisplayStatsFootball()
+        public static int DisplayStatsFootball()
         {
             Console.Clear();
             PrintLn("********************* Football Conf. Menu **********************");
-            var footballConferenceNames = GetField(5);
+            PrintSubMenu(GetField(5));
             PrintLn("Enter the number of your selection or 'B' to return to the main menu." + "\r\n");
             string footballConfSelection = Console.ReadLine();
             PrintLn(footballConfSelection);
+            if(footballConfSelection.ToUpper() == "B")
+            {
+                return 0;
+            }
+            else if(Int32.TryParse(footballConfSelection, out int number))
+            {
+                GetColleges(number);
+            }
+            else
+            {
+                return 2;
+            }
+                   
         }
 
         public static void DisplayStatsPrimary()
         {
             Console.Clear();
             PrintLn("********************* Primanry Conf. Menu **********************");
-            var footballConferenceNames = GetField(4);
+            PrintSubMenu(GetField(4));
             PrintLn("Enter the number of your selection or 'B' to return to the main menu." + "\r\n");
             string primaryConfSelection = Console.ReadLine();
             PrintLn(primaryConfSelection);
@@ -103,7 +114,6 @@ namespace ncaa_grad_info
 
                 string line = "";
                 reader.ReadLine();
-                int count = 1;
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] values = line.Split(',');
@@ -117,15 +127,7 @@ namespace ncaa_grad_info
                         if (!fieldValues.Contains(values[field]))
                         {
                             fieldValues.Add(values[field]);
-                            if (count < 10)
-                            {
-                                PrintLn(count.ToString() + "...." + values[field]);
-                            }
-                            else
-                            {
-                                PrintLn(count.ToString() + "..." + values[field]);
-                            }
-                            count++;
+                           
                         } 
                     }
                 }
@@ -136,6 +138,22 @@ namespace ncaa_grad_info
 
         }
 
+        public static void PrintSubMenu(List<string> fieldValues)
+        {
+            int count = 1;
+            foreach (string fieldValue in fieldValues)
+            {
+                if (count < 10)
+                {
+                    PrintLn(count.ToString() + "...." + fieldValue);
+                }
+                else
+                {
+                    PrintLn(count.ToString() + "..." + fieldValue);
+                }
+                count++;
+            }
+        }
 
 
 

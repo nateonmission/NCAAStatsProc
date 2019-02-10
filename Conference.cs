@@ -9,6 +9,6 @@ namespace ncaa_grad_info
     class Conference
     {
         public string ConferenceName { get; set; }
-        public List<string> CollegeNames { get; set; }
+        public List<string> Colleges { get; set; }
     }
 }
