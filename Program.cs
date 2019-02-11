@@ -11,6 +11,7 @@ namespace ncaa_grad_info
 {
     class Program
     {
+        // MAIN
         static void Main(string[] args)
         {
             int again = 1;
@@ -20,12 +21,13 @@ namespace ncaa_grad_info
             }
         }
 
+        // My PRINT function, because I'm lazy
         public static void PrintLn(string text)
         {
             Console.WriteLine(text);
         }
 
-
+        // Prints menu and interprets user's choice
         public static int MainMenu()
         {
             Console.Clear();
@@ -58,6 +60,7 @@ namespace ncaa_grad_info
 
         }
 
+        // Generates and displays a list of Football conferences from the CSV
         public static int DisplayMenuFootball()
         {
             Console.Clear();
@@ -89,6 +92,7 @@ namespace ncaa_grad_info
                    
         }
 
+        // Generates and displays a list of Primary conferences from the CSV
         public static void DisplayMenuPrimary()
         {
             Console.Clear();
@@ -109,7 +113,7 @@ namespace ncaa_grad_info
             }
         }
 
-        // Read and List Football ConferenceList Names from Data File
+        // Reads and returns a List<string> of all entries from one column in CSV without repeats or empty strings
         public static List<string> GetField(int field)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
@@ -142,10 +146,9 @@ namespace ncaa_grad_info
             }
 
             return fieldValues;
-
-
         }
 
+        // Prints SubMenues with a selection number
         public static List<string> PrintSubMenu(List<string> fieldValues)
         {
             int count = 1;
