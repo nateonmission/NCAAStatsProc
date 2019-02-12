@@ -75,10 +75,17 @@ namespace ncaa_grad_info
                 return 0;
             }
 
-            else if(number <= maxValue && number > 0)
+            else if (number <= maxValue && number > 0)
             {
                 PrintLn(footballConfList.ElementAt(number - 1));
                 string selectedConf = footballConfList.ElementAt(number - 1);
+                
+
+                string currentDirectory = Directory.GetCurrentDirectory();
+                DirectoryInfo directory = new DirectoryInfo(currentDirectory);
+                var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
+                List<College> NCAA_CSV = ReadCollegeData(fileName);
+
                 Console.ReadKey();
                 return 0;
             }
@@ -89,7 +96,7 @@ namespace ncaa_grad_info
                 Console.ReadKey();
                 return 0;
             }
-                   
+
         }
 
         // Generates and displays a list of Primary conferences from the CSV
@@ -139,8 +146,8 @@ namespace ncaa_grad_info
                         if (!fieldValues.Contains(values[field]))
                         {
                             fieldValues.Add(values[field]);
-                           
-                        } 
+
+                        }
                     }
                 }
             }
@@ -168,11 +175,56 @@ namespace ncaa_grad_info
             return fieldValues;
         }
 
+        // Load CSV data into College Classes and adds then to a List<College>
+        public static List<College> ReadCollegeData(string fileName)
+        {
+
+            var NCAACollegeData = new List<College>();
+            using (var reader = new StreamReader(fileName))
+            {
+                string line = "";
+                reader.ReadLine();
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var college = new College();
+                    string[] values = line.Split(',');
+
+                    college.SchoolID = values[0];
+                    college.SchoolName = values[1];
+                    college.SchoolDivision = values[2];
+                    college.SchoolSubdivision = values[3];
+                    college.SchoolPrimaryConf = values[4];
+                    college.SchoolFootballConf = values[5];
+                    college.SchoolPrivate = values[7];
+
+                    int parseInt;
+                    if (int.TryParse(values[8], out parseInt))
+                    {
+                        college.Fed_SACohort = parseInt;
+                    }
+                    if (int.TryParse(values[9], out parseInt))
+                    {
+                        college.Fed_SAGradRate = parseInt;
+                    }
+                    if (int.TryParse(values[10], out parseInt))
+                    {
+                        college.GSR_SACohort = parseInt;
+                    }
+                    if (int.TryParse(values[11], out parseInt))
+                    {
+                        college.GSR_SAGradRate = parseInt;
+                    }
+
+                    NCAACollegeData.Add(college);
+
+                }
+
+            }
+            return NCAACollegeData;
+        }
+
+
 
 
     }
-
-        
-
-
- }
+}
