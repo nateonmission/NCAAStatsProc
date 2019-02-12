@@ -23,8 +23,8 @@ FED_N_SA -- Number of Student Athletes in Federal Cohort 2008-2011
 FED_RATE_SA -- Graduation rate of the above cohort in percentage
 
 DATATAB_4YR_OVERALL_GSR_SA --
-GSR_N_SA --
-GSR_SA --
+GSR_N_SA -- Number of Student Athletes in GSR Cohort 2008-2011
+GSR_SA -- Graduation rate of the above cohort in percentage
 
 DATATAB_4YR_Gender_fed_SA --
 FED_N_MALE_SA --

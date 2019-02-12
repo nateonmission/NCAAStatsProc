@@ -84,7 +84,7 @@ namespace ncaa_grad_info
                 string currentDirectory = Directory.GetCurrentDirectory();
                 DirectoryInfo directory = new DirectoryInfo(currentDirectory);
                 var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
-                List<College> NCAA_CSV = ReadCollegeData(fileName);
+                List<College> NCAA_CSV = ReadCollegeData(fileName, selectedConf);
 
                 Console.ReadKey();
                 return 0;
@@ -176,7 +176,7 @@ namespace ncaa_grad_info
         }
 
         // Load CSV data into College Classes and adds then to a List<College>
-        public static List<College> ReadCollegeData(string fileName)
+        public static List<College> ReadCollegeData(string fileName, string selectedConf)
         {
 
             var NCAACollegeData = new List<College>();
@@ -215,8 +215,11 @@ namespace ncaa_grad_info
                         college.GSR_SAGradRate = parseInt;
                     }
 
-                    NCAACollegeData.Add(college);
-
+                    // If FbConf == "" then FbConf = PrimConf;  If FbConf = ChosenConf then
+                    if (values[5] == selectedConf)
+                    { 
+                        NCAACollegeData.Add(college);
+                    }
                 }
 
             }
