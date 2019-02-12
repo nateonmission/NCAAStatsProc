@@ -3,7 +3,11 @@
 This file contains information needed to understand the contents of CSV file obtained from the NCAA DataSet webpage (http://www.ncaa.org/about/resources/research/shared-ncaa-research-data).
 
 Lines that begin with 
+SCL - School
+FED - Federal
+GSR - Graduation Success Rate
 DATATAB represent the beginning of a new sheet in a spredsheet book.
+
 
 SCL_UNITID -- Numerical ID assigned by the NCAA. 
 SCL_NAME -- The Name of the College/University. 
@@ -15,8 +19,8 @@ SCL_HBCU -- Indicates if the school is classified as an Historically Black Colle
 SCL_PRIVATE -- Indicates if the school is Private or state funded. 
 
 DATATAB_4YR_OVERALL_FED_SA --
-FED_N_SA --
-FED_RATE_SA --
+FED_N_SA -- Number of Student Athletes in Federal Cohort 2008-2011
+FED_RATE_SA -- Graduation rate of the above cohort in percentage
 
 DATATAB_4YR_OVERALL_GSR_SA --
 GSR_N_SA --
