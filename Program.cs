@@ -198,24 +198,23 @@ namespace ncaa_grad_info
                     college.SchoolPrivate = values[7];
 
                     int parseInt;
-                    if (int.TryParse(values[8], out parseInt))
+                    if (int.TryParse(values[9], out parseInt))
                     {
                         college.Fed_SACohort = parseInt;
                     }
-                    if (int.TryParse(values[9], out parseInt))
+                    if (int.TryParse(values[10], out parseInt))
                     {
                         college.Fed_SAGradRate = parseInt;
                     }
-                    if (int.TryParse(values[10], out parseInt))
+                    if (int.TryParse(values[12], out parseInt))
                     {
                         college.GSR_SACohort = parseInt;
                     }
-                    if (int.TryParse(values[11], out parseInt))
+                    if (int.TryParse(values[13], out parseInt))
                     {
                         college.GSR_SAGradRate = parseInt;
                     }
 
-                    // If FbConf == "" then FbConf = PrimConf;  If FbConf = ChosenConf then
                     if (values[5] == selectedConf)
                     { 
                         NCAACollegeData.Add(college);

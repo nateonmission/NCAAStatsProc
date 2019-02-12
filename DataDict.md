@@ -9,34 +9,34 @@ GSR - Graduation Success Rate
 DATATAB represent the beginning of a new sheet in a spredsheet book.
 
 
-SCL_UNITID -- Numerical ID assigned by the NCAA. 
-SCL_NAME -- The Name of the College/University. 
-SCL_DIVISION -- The NCAA division is an indicator of the level at which the school compeats. 
-SCL_SUBDIVISION -- Division I is divided between the Bowl Subdivision (A), and the Championship Subdivision (AA) 
-SCL_CONFERENCE -- The Primary Conference to which the school belongs.
-DIV1_FB_CONFERENCE -- The Conference to which the school belongs for Football
-SCL_HBCU -- Indicates if the school is classified as an Historically Black College or University.
-SCL_PRIVATE -- Indicates if the school is Private or state funded. 
+[0] SCL_UNITID -- Numerical ID assigned by the NCAA. 
+[1] SCL_NAME -- The Name of the College/University. 
+[2] SCL_DIVISION -- The NCAA division is an indicator of the level at which the school compeats. 
+[3] SCL_SUBDIVISION -- Division I is divided between the Bowl Subdivision (A), and the Championship Subdivision (AA) 
+[4] SCL_CONFERENCE -- The Primary Conference to which the school belongs.
+[5] DIV1_FB_CONFERENCE -- The Conference to which the school belongs for Football
+[6] SCL_HBCU -- Indicates if the school is classified as an Historically Black College or University.
+[7] SCL_PRIVATE -- Indicates if the school is Private or state funded. 
 
-DATATAB_4YR_OVERALL_FED_SA --
-FED_N_SA -- Number of Student Athletes in Federal Cohort 2008-2011
-FED_RATE_SA -- Graduation rate of the above cohort in percentage
+[8] DATATAB_4YR_OVERALL_FED_SA --
+[9] FED_N_SA -- Number of Student Athletes in Federal Cohort 2008-2011
+[10] FED_RATE_SA -- Graduation rate of the above cohort in percentage
 
-DATATAB_4YR_OVERALL_GSR_SA --
-GSR_N_SA -- Number of Student Athletes in GSR Cohort 2008-2011
-GSR_SA -- Graduation rate of the above cohort in percentage
+[11] DATATAB_4YR_OVERALL_GSR_SA --
+[12] GSR_N_SA -- Number of Student Athletes in GSR Cohort 2008-2011
+[13] GSR_SA -- Graduation rate of the above cohort in percentage
 
-DATATAB_4YR_Gender_fed_SA --
-FED_N_MALE_SA --
-FED_RATE_MALE_SA --
-FED_N_FEMALE_SA --
-FED_RATE_FEMALE_SA --
+[14] DATATAB_4YR_Gender_fed_SA --
+[15] FED_N_MALE_SA --
+[16] FED_RATE_MALE_SA --
+[17] FED_N_FEMALE_SA --
+[18] FED_RATE_FEMALE_SA --
 
-DATATAB_4YR_Gender_gsr_SA --
-GSR_N_MALE_SA --
-GSR_MALE_SA --
-GSR_N_FEMALE_SA --
-GSR_FEMALE_SA --
+[19] DATATAB_4YR_Gender_gsr_SA --
+[20] GSR_N_MALE_SA --
+[21] GSR_MALE_SA --
+[22] GSR_N_FEMALE_SA --
+[23] GSR_FEMALE_SA --
 
 DATATAB_4YR_RACE_FED_SA --
 FED_RATE_AA_SA --
