@@ -86,9 +86,9 @@ namespace ncaa_grad_info
                 var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
                 List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf);
 
-                List<Conference> confAggregate = AggregateConfData(NCAACollegeData);
+                int agg = AggregateConfData(NCAACollegeData);
 
-                DisplayConfData(NCAACollegeData, selectedConf);
+                DisplayConfData(NCAACollegeData, selectedConf, agg);
 
                 Console.ReadKey();
                 return 0;
@@ -230,17 +230,18 @@ namespace ncaa_grad_info
         }
 
 
-        public static Conference AggregateConfData(List<College> NCAACollegeData)
-        {
-
-            return ConfAggData;
+        public static int AggregateConfData(List<College> NCAACollegeData)
+        {  //double total = myList.Sum(item => item.Amount);
+            int agg = NCAACollegeData.Sum(item => item.Fed_SACohort);
+            return agg;
         }
 
         // Dispay Aggregate Statistics for Conference
-        public static void DisplayConfData(List<College> NCAACollegeData, string selectedConf)
+        public static void DisplayConfData(List<College> NCAACollegeData, string selectedConf, int agg)
         {
             Console.Clear();
             PrintLn("******************** " + selectedConf + " ********************");
+            PrintLn(agg.ToString());
         }
 
     }
