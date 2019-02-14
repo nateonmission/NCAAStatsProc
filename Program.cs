@@ -229,9 +229,9 @@ namespace ncaa_grad_info
             return NCAACollegeData;
         }
 
-
+        // Aggregates data from individual colleges and calculates stats from Conference
         public static int AggregateConfData(List<College> NCAACollegeData)
-        {  //double total = myList.Sum(item => item.Amount);
+        {  
             int agg = NCAACollegeData.Sum(item => item.Fed_SACohort);
             return agg;
         }
@@ -241,7 +241,7 @@ namespace ncaa_grad_info
         {
             Console.Clear();
             PrintLn("******************** " + selectedConf + " ********************");
-            PrintLn(agg.ToString());
+            PrintLn("Total Student Athletes in Federal Cohort: " + agg.ToString());
         }
 
     }
