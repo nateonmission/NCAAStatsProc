@@ -8,7 +8,8 @@ namespace ncaa_grad_info
 {
     class Conference
     {
-        public string ConferenceName { get; set; }
-        public List<string> Colleges { get; set; }
+        public int Fed_SACohort { get; set; }
+        public int GSR_SACohort { get; set; }
+
     }
 }

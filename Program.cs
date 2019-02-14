@@ -84,7 +84,9 @@ namespace ncaa_grad_info
                 string currentDirectory = Directory.GetCurrentDirectory();
                 DirectoryInfo directory = new DirectoryInfo(currentDirectory);
                 var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
-                List<College> NCAA_CSV = ReadCollegeData(fileName, selectedConf);
+                List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf);
+
+                DisplayConfData(NCAACollegeData, selectedConf);
 
                 Console.ReadKey();
                 return 0;
@@ -226,7 +228,11 @@ namespace ncaa_grad_info
         }
 
 
-
+        public static void DisplayConfData(List<College> NCAACollegeData, string selectedConf)
+        {
+            Console.Clear();
+            PrintLn("******************** " + selectedConf + " ********************");
+        }
 
     }
 }
