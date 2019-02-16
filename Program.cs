@@ -86,9 +86,9 @@ namespace ncaa_grad_info
                 var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
                 List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf);
 
-                int agg = AggregateConfData(NCAACollegeData);
+                double Fed_SACohort_Avg = AggregateConfData(NCAACollegeData);
 
-                DisplayConfData(NCAACollegeData, selectedConf, agg);
+                DisplayConfData(NCAACollegeData, selectedConf, Fed_SACohort_Avg);
 
                 Console.ReadKey();
                 return 0;
@@ -230,18 +230,18 @@ namespace ncaa_grad_info
         }
 
         // Aggregates data from individual colleges and calculates stats from Conference
-        public static int AggregateConfData(List<College> NCAACollegeData)
+        public static double AggregateConfData(List<College> NCAACollegeData)
         {  
-            int agg = NCAACollegeData.Sum(item => item.Fed_SACohort);
-            return agg;
+            double Fed_SACohort_Avg = NCAACollegeData.Average(item => item.Fed_SACohort);
+            return Fed_SACohort_Avg;
         }
 
         // Dispay Aggregate Statistics for Conference
-        public static void DisplayConfData(List<College> NCAACollegeData, string selectedConf, int agg)
+        public static void DisplayConfData(List<College> NCAACollegeData, string selectedConf, double Fed_SACohort_Avg)
         {
             Console.Clear();
             PrintLn("******************** " + selectedConf + " ********************");
-            PrintLn("Total Student Athletes in Federal Cohort: " + agg.ToString());
+            PrintLn("Average Student Athlete Population (Federal Cohort): " + Fed_SACohort_Avg.ToString());
         }
 
     }
