@@ -86,9 +86,9 @@ namespace ncaa_grad_info
                 var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
                 List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf);
 
-                double Fed_SACohort_Avg = AggregateConfData(NCAACollegeData);
+                double NCAAConfData = AggregateConfData(NCAACollegeData, footballConfSelection);
 
-                DisplayConfData(NCAACollegeData, selectedConf, Fed_SACohort_Avg);
+                DisplayConfData(NCAAConfData);
 
                 Console.ReadKey();
                 return 0;
@@ -413,8 +413,6 @@ namespace ncaa_grad_info
                         college.GSR_N_1995_SA = parseInt;
                     }
 
-
-
                     // NCAA calulated Greaduation Rate per year
                     if (int.TryParse(values[70], out parseInt))
                     {
@@ -497,14 +495,15 @@ namespace ncaa_grad_info
         }
 
         // Aggregates data from individual colleges and calculates stats from Conference
-        public static double AggregateConfData(List<College> NCAACollegeData)
-        {  
-            double Fed_SACohort_Avg = NCAACollegeData.Average(item => item.GSR_N_2011_SA);
-            return Fed_SACohort_Avg;
+        public static List<Conference> AggregateConfData(List<College> NCAACollegeData, string footballConfSelection)
+        {
+            var NCAAConfDate = new List<Conference>;
+            
+            return NCAAConfDate;
         }
 
         // Dispay Aggregate Statistics for Conference
-        public static void DisplayConfData(List<College> NCAACollegeData, string selectedConf, double Fed_SACohort_Avg)
+        public static void DisplayConfData(List<College> NCAAConfData)
         {
             Console.Clear();
             PrintLn("******************** " + selectedConf + " ********************");
