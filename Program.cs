@@ -193,6 +193,7 @@ namespace ncaa_grad_info
                     var college = new College();
                     string[] values = line.Split(',');
 
+                    // Identification Information
                     college.SchoolID = values[0];
                     college.SchoolName = values[1];
                     college.SchoolDivision = values[2];
@@ -202,22 +203,288 @@ namespace ncaa_grad_info
                     college.SchoolPrivate = values[7];
 
                     int parseInt;
-                    if (int.TryParse(values[9], out parseInt))
+                    // FEDERAL Population per year
+                    if (int.TryParse(values[53], out parseInt))
                     {
-                        college.Fed_SACohort = parseInt;
+                        college.FED_N_2011_SA = parseInt;
                     }
-                    if (int.TryParse(values[10], out parseInt))
+                    if (int.TryParse(values[54], out parseInt))
                     {
-                        college.Fed_SAGradRate = parseInt;
+                        college.FED_N_2010_SA = parseInt;
                     }
-                    if (int.TryParse(values[12], out parseInt))
+                    if (int.TryParse(values[55], out parseInt))
                     {
-                        college.GSR_SACohort = parseInt;
+                        college.FED_N_2009_SA = parseInt;
                     }
-                    if (int.TryParse(values[13], out parseInt))
+                    if (int.TryParse(values[56], out parseInt))
                     {
-                        college.GSR_SAGradRate = parseInt;
+                        college.FED_N_2008_SA = parseInt;
                     }
+                    if (int.TryParse(values[57], out parseInt))
+                    {
+                        college.FED_N_2007_SA = parseInt;
+                    }
+                    if (int.TryParse(values[58], out parseInt))
+                    {
+                        college.FED_N_2006_SA = parseInt;
+                    }
+                    if (int.TryParse(values[59], out parseInt))
+                    {
+                        college.FED_N_2005_SA = parseInt;
+                    }
+                    if (int.TryParse(values[60], out parseInt))
+                    {
+                        college.FED_N_2004_SA = parseInt;
+                    }
+                    if (int.TryParse(values[61], out parseInt))
+                    {
+                        college.FED_N_2003_SA = parseInt;
+                    }
+                    if (int.TryParse(values[62], out parseInt))
+                    {
+                        college.FED_N_2002_SA = parseInt;
+                    }
+                    if (int.TryParse(values[63], out parseInt))
+                    {
+                        college.FED_N_2001_SA = parseInt;
+                    }
+                    if (int.TryParse(values[64], out parseInt))
+                    {
+                        college.FED_N_2000_SA = parseInt;
+                    }
+                    if (int.TryParse(values[65], out parseInt))
+                    {
+                        college.FED_N_1999_SA = parseInt;
+                    }
+                    if (int.TryParse(values[66], out parseInt))
+                    {
+                        college.FED_N_1998_SA = parseInt;
+                    }
+                    if (int.TryParse(values[67], out parseInt))
+                    {
+                        college.FED_N_1997_SA = parseInt;
+                    }
+                    if (int.TryParse(values[68], out parseInt))
+                    {
+                        college.FED_N_1996_SA = parseInt;
+                    }
+                    if (int.TryParse(values[69], out parseInt))
+                    {
+                        college.FED_N_1995_SA = parseInt;
+                    }
+
+                    // FEDERAL Graduation Rate per year
+                    if (int.TryParse(values[70], out parseInt))
+                    {
+                        college.FED_RATE_2011_SA = parseInt;
+                    }
+                    if (int.TryParse(values[71], out parseInt))
+                    {
+                        college.FED_RATE_2010_SA = parseInt;
+                    }
+                    if (int.TryParse(values[72], out parseInt))
+                    {
+                        college.FED_RATE_2009_SA = parseInt;
+                    }
+                    if (int.TryParse(values[73], out parseInt))
+                    {
+                        college.FED_RATE_2008_SA = parseInt;
+                    }
+                    if (int.TryParse(values[74], out parseInt))
+                    {
+                        college.FED_RATE_2007_SA = parseInt;
+                    }
+                    if (int.TryParse(values[75], out parseInt))
+                    {
+                        college.FED_RATE_2006_SA = parseInt;
+                    }
+                    if (int.TryParse(values[76], out parseInt))
+                    {
+                        college.FED_RATE_2005_SA = parseInt;
+                    }
+                    if (int.TryParse(values[77], out parseInt))
+                    {
+                        college.FED_RATE_2004_SA = parseInt;
+                    }
+                    if (int.TryParse(values[78], out parseInt))
+                    {
+                        college.FED_RATE_2003_SA = parseInt;
+                    }
+                    if (int.TryParse(values[79], out parseInt))
+                    {
+                        college.FED_RATE_2002_SA = parseInt;
+                    }
+                    if (int.TryParse(values[80], out parseInt))
+                    {
+                        college.FED_RATE_2001_SA = parseInt;
+                    }
+                    if (int.TryParse(values[81], out parseInt))
+                    {
+                        college.FED_RATE_2000_SA = parseInt;
+                    }
+                    if (int.TryParse(values[82], out parseInt))
+                    {
+                        college.FED_RATE_1999_SA = parseInt;
+                    }
+                    if (int.TryParse(values[83], out parseInt))
+                    {
+                        college.FED_RATE_1998_SA = parseInt;
+                    }
+                    if (int.TryParse(values[84], out parseInt))
+                    {
+                        college.FED_RATE_1997_SA = parseInt;
+                    }
+                    if (int.TryParse(values[85], out parseInt))
+                    {
+                        college.FED_RATE_1996_SA = parseInt;
+                    }
+                    if (int.TryParse(values[86], out parseInt))
+                    {
+                        college.FED_RATE_1995_SA = parseInt;
+                    }
+
+                    // NCAA calculated Population per year
+                    if (int.TryParse(values[53], out parseInt))
+                    {
+                        college.GSR_N_2011_SA = parseInt;
+                    }
+                    if (int.TryParse(values[54], out parseInt))
+                    {
+                        college.GSR_N_2010_SA = parseInt;
+                    }
+                    if (int.TryParse(values[55], out parseInt))
+                    {
+                        college.GSR_N_2009_SA = parseInt;
+                    }
+                    if (int.TryParse(values[56], out parseInt))
+                    {
+                        college.GSR_N_2008_SA = parseInt;
+                    }
+                    if (int.TryParse(values[57], out parseInt))
+                    {
+                        college.GSR_N_2007_SA = parseInt;
+                    }
+                    if (int.TryParse(values[58], out parseInt))
+                    {
+                        college.GSR_N_2006_SA = parseInt;
+                    }
+                    if (int.TryParse(values[59], out parseInt))
+                    {
+                        college.GSR_N_2005_SA = parseInt;
+                    }
+                    if (int.TryParse(values[60], out parseInt))
+                    {
+                        college.GSR_N_2004_SA = parseInt;
+                    }
+                    if (int.TryParse(values[61], out parseInt))
+                    {
+                        college.GSR_N_2003_SA = parseInt;
+                    }
+                    if (int.TryParse(values[62], out parseInt))
+                    {
+                        college.GSR_N_2002_SA = parseInt;
+                    }
+                    if (int.TryParse(values[63], out parseInt))
+                    {
+                        college.GSR_N_2001_SA = parseInt;
+                    }
+                    if (int.TryParse(values[64], out parseInt))
+                    {
+                        college.GSR_N_2000_SA = parseInt;
+                    }
+                    if (int.TryParse(values[65], out parseInt))
+                    {
+                        college.GSR_N_1999_SA = parseInt;
+                    }
+                    if (int.TryParse(values[66], out parseInt))
+                    {
+                        college.GSR_N_1998_SA = parseInt;
+                    }
+                    if (int.TryParse(values[67], out parseInt))
+                    {
+                        college.GSR_N_1997_SA = parseInt;
+                    }
+                    if (int.TryParse(values[68], out parseInt))
+                    {
+                        college.GSR_N_1996_SA = parseInt;
+                    }
+                    if (int.TryParse(values[69], out parseInt))
+                    {
+                        college.GSR_N_1995_SA = parseInt;
+                    }
+
+
+
+                    // NCAA calulated Greaduation Rate per year
+                    if (int.TryParse(values[70], out parseInt))
+                    {
+                        college.GSR_2011_SA = parseInt;
+                    }
+                    if (int.TryParse(values[71], out parseInt))
+                    {
+                        college.GSR_2010_SA = parseInt;
+                    }
+                    if (int.TryParse(values[72], out parseInt))
+                    {
+                        college.GSR_2009_SA = parseInt;
+                    }
+                    if (int.TryParse(values[73], out parseInt))
+                    {
+                        college.GSR_2008_SA = parseInt;
+                    }
+                    if (int.TryParse(values[74], out parseInt))
+                    {
+                        college.GSR_2007_SA = parseInt;
+                    }
+                    if (int.TryParse(values[75], out parseInt))
+                    {
+                        college.GSR_2006_SA = parseInt;
+                    }
+                    if (int.TryParse(values[76], out parseInt))
+                    {
+                        college.GSR_2005_SA = parseInt;
+                    }
+                    if (int.TryParse(values[77], out parseInt))
+                    {
+                        college.GSR_2004_SA = parseInt;
+                    }
+                    if (int.TryParse(values[78], out parseInt))
+                    {
+                        college.GSR_2003_SA = parseInt;
+                    }
+                    if (int.TryParse(values[79], out parseInt))
+                    {
+                        college.GSR_2002_SA = parseInt;
+                    }
+                    if (int.TryParse(values[80], out parseInt))
+                    {
+                        college.GSR_2001_SA = parseInt;
+                    }
+                    if (int.TryParse(values[81], out parseInt))
+                    {
+                        college.GSR_2000_SA = parseInt;
+                    }
+                    if (int.TryParse(values[82], out parseInt))
+                    {
+                        college.GSR_1999_SA = parseInt;
+                    }
+                    if (int.TryParse(values[83], out parseInt))
+                    {
+                        college.GSR_1998_SA = parseInt;
+                    }
+                    if (int.TryParse(values[84], out parseInt))
+                    {
+                        college.GSR_1997_SA = parseInt;
+                    }
+                    if (int.TryParse(values[85], out parseInt))
+                    {
+                        college.GSR_1996_SA = parseInt;
+                    }
+                    if (int.TryParse(values[86], out parseInt))
+                    {
+                        college.GSR_1995_SA = parseInt;
+                    }
+
 
                     if (values[5] == selectedConf)
                     { 
@@ -232,7 +499,7 @@ namespace ncaa_grad_info
         // Aggregates data from individual colleges and calculates stats from Conference
         public static double AggregateConfData(List<College> NCAACollegeData)
         {  
-            double Fed_SACohort_Avg = NCAACollegeData.Average(item => item.Fed_SACohort);
+            double Fed_SACohort_Avg = NCAACollegeData.Average(item => item.GSR_N_2011_SA);
             return Fed_SACohort_Avg;
         }
 
