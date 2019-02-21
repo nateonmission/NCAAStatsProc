@@ -77,6 +77,7 @@ namespace ncaa_grad_info
 
             else if (number <= maxValue && number > 0)
             {
+                int confType = 5;
                 PrintLn(footballConfList.ElementAt(number - 1));
                 string selectedConf = footballConfList.ElementAt(number - 1);
                 
@@ -84,7 +85,7 @@ namespace ncaa_grad_info
                 string currentDirectory = Directory.GetCurrentDirectory();
                 DirectoryInfo directory = new DirectoryInfo(currentDirectory);
                 var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
-                List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf);
+                List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf, confType);
 
                 Conference NCAAConfData = AggregateConfData(NCAACollegeData, selectedConf);
 
@@ -180,7 +181,7 @@ namespace ncaa_grad_info
         }
 
         // Load CSV data into College Classes and adds then to a List<College>
-        public static List<College> ReadCollegeData(string fileName, string selectedConf)
+        public static List<College> ReadCollegeData(string fileName, string selectedConf, int confType)
         {
 
             var NCAACollegeData = new List<College>();
@@ -484,7 +485,7 @@ namespace ncaa_grad_info
                     }
 
 
-                    if (values[5] == selectedConf)
+                    if (values[confType] == selectedConf)
                     { 
                         NCAACollegeData.Add(college);
                     }
@@ -499,6 +500,18 @@ namespace ncaa_grad_info
         {
             var NCAAConfData = new Conference();
             NCAAConfData.ChosenConf = footballConfSelection;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             return NCAAConfData;
