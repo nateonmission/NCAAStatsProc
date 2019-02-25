@@ -80,7 +80,7 @@ namespace ncaa_grad_info
                 int confType = 5;
                 PrintLn(footballConfList.ElementAt(number - 1));
                 string selectedConf = footballConfList.ElementAt(number - 1);
-                
+
 
                 string currentDirectory = Directory.GetCurrentDirectory();
                 DirectoryInfo directory = new DirectoryInfo(currentDirectory);
@@ -486,7 +486,7 @@ namespace ncaa_grad_info
 
 
                     if (values[confType] == selectedConf)
-                    { 
+                    {
                         NCAACollegeData.Add(college);
                     }
                 }
@@ -501,9 +501,76 @@ namespace ncaa_grad_info
             var NCAAConfData = new Conference();
             NCAAConfData.ChosenConf = footballConfSelection;
 
+            NCAAConfData.FED_N_2011_SA = 0 ;
+            NCAAConfData.FED_N_2010_SA = 0 ;
+            NCAAConfData.FED_N_2009_SA = 0 ;
+            NCAAConfData.FED_N_2008_SA = 0 ;
+            NCAAConfData.FED_N_2007_SA = 0 ;
+            NCAAConfData.FED_N_2006_SA = 0 ;
+            NCAAConfData.FED_N_2005_SA = 0 ;
+            NCAAConfData.FED_N_2004_SA = 0 ;
+            NCAAConfData.FED_N_2003_SA = 0 ;
+            NCAAConfData.FED_N_2002_SA = 0 ;
+            NCAAConfData.FED_N_2001_SA = 0 ;
+            NCAAConfData.FED_N_2000_SA = 0 ;
+            NCAAConfData.FED_N_1999_SA = 0 ;
+            NCAAConfData.FED_N_1998_SA = 0 ;
+            NCAAConfData.FED_N_1997_SA = 0 ;
+            NCAAConfData.FED_N_1996_SA = 0 ;
+            NCAAConfData.FED_N_1995_SA = 0 ;
+            NCAAConfData.FED_RATE_2011_SA = 0 ;
+            NCAAConfData.FED_RATE_2010_SA = 0 ;
+            NCAAConfData.FED_RATE_2009_SA = 0 ;
+            NCAAConfData.FED_RATE_2008_SA = 0 ;
+            NCAAConfData.FED_RATE_2007_SA = 0 ;
+            NCAAConfData.FED_RATE_2006_SA = 0 ;
+            NCAAConfData.FED_RATE_2005_SA = 0 ;
+            NCAAConfData.FED_RATE_2004_SA = 0 ;
+            NCAAConfData.FED_RATE_2003_SA = 0 ;
+            NCAAConfData.FED_RATE_2002_SA = 0 ;
+            NCAAConfData.FED_RATE_2001_SA = 0 ;
+            NCAAConfData.FED_RATE_2000_SA = 0 ;
+            NCAAConfData.FED_RATE_1999_SA = 0 ;
+            NCAAConfData.FED_RATE_1998_SA = 0 ;
+            NCAAConfData.FED_RATE_1997_SA = 0 ;
+            NCAAConfData.FED_RATE_1996_SA = 0 ;
+            NCAAConfData.FED_RATE_1995_SA = 0 ;                
+            NCAAConfData.GSR_N_2011_SA = 0 ;
+            NCAAConfData.GSR_N_2010_SA = 0 ;
+            NCAAConfData.GSR_N_2009_SA = 0 ;
+            NCAAConfData.GSR_N_2008_SA = 0 ;
+            NCAAConfData.GSR_N_2007_SA = 0 ;
+            NCAAConfData.GSR_N_2006_SA = 0 ;
+            NCAAConfData.GSR_N_2005_SA = 0 ;
+            NCAAConfData.GSR_N_2004_SA = 0 ;
+            NCAAConfData.GSR_N_2003_SA = 0 ;
+            NCAAConfData.GSR_N_2002_SA = 0 ;
+            NCAAConfData.GSR_N_2001_SA = 0 ;
+            NCAAConfData.GSR_N_2000_SA = 0 ;
+            NCAAConfData.GSR_N_1999_SA = 0 ;
+            NCAAConfData.GSR_N_1998_SA = 0 ;
+            NCAAConfData.GSR_N_1997_SA = 0 ;
+            NCAAConfData.GSR_N_1996_SA = 0 ;
+            NCAAConfData.GSR_N_1995_SA = 0 ;
+            NCAAConfData.GSR_2011_SA = 0 ;
+            NCAAConfData.GSR_2010_SA = 0 ;
+            NCAAConfData.GSR_2009_SA = 0 ;
+            NCAAConfData.GSR_2008_SA = 0 ;
+            NCAAConfData.GSR_2007_SA = 0 ;
+            NCAAConfData.GSR_2006_SA = 0 ;
+            NCAAConfData.GSR_2005_SA = 0 ;
+            NCAAConfData.GSR_2004_SA = 0 ;
+            NCAAConfData.GSR_2003_SA = 0 ;
+            NCAAConfData.GSR_2002_SA = 0 ;
+            NCAAConfData.GSR_2001_SA = 0 ;
+            NCAAConfData.GSR_2000_SA = 0 ;
+            NCAAConfData.GSR_1999_SA = 0 ;
+            NCAAConfData.GSR_1998_SA = 0 ;
+            NCAAConfData.GSR_1997_SA = 0 ;
+            NCAAConfData.GSR_1996_SA = 0 ;
+            NCAAConfData.GSR_1995_SA = 0 ;
 
-
-
+            
 
 
 
