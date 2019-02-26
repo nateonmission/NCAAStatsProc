@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Globalization;
+using System.Reflection;
 using Newtonsoft.Json;
 
 namespace ncaa_grad_info
@@ -32,8 +33,8 @@ namespace ncaa_grad_info
         {
             Console.Clear();
             PrintLn("************************* MAIN MENU **************************");
-            PrintLn("1. Display Individual School Stats by Football ConferenceList");
-            PrintLn("2. Display Individual School Stats by Primary ConferenceList");
+            PrintLn("1. Display Individual School Stats by Football Conference");
+            PrintLn("2. Display Individual School Stats by Primary Conference");
             PrintLn("9. Quit");
             PrintLn("");
             string choice = Console.ReadLine();
@@ -641,14 +642,6 @@ namespace ncaa_grad_info
             NCAAConfData.AVG_GSR_1996_SA = NCAACollegeData.Sum(item => item.GSR_1996_SA);
             NCAAConfData.AVG_GSR_1995_SA = NCAACollegeData.Sum(item => item.GSR_1995_SA);
 
-
-
-
-
-
-
-
-
             return NCAAConfData;
         }
 
@@ -657,7 +650,14 @@ namespace ncaa_grad_info
         {
             Console.Clear();
             PrintLn("******************** " + NCAAConfData.ChosenConf + " ********************");
-            PrintLn("Average Student Athlete Population (Federal Cohort): " );
+            //PrintLn("FED_N_2011_SA: " + NCAAConfData.FED_N_2011_SA);
+
+
+            foreach (PropertyInfo prop in typeof(Conference).GetProperties())
+            {
+                Console.WriteLine("{0} = {1}", prop.Name, prop.GetValue(NCAAConfData, null));
+            }
+
         }
 
     }
