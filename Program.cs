@@ -16,10 +16,11 @@ namespace ncaa_grad_info
         // MAIN
         static void Main(string[] args)
         {
-            
-            while (currentUser.session == 0 || currentUser == null)
+            User currentUser = new User();
+            currentUser.Session = 0;
+            while (currentUser.Session == 0)
             {
-                loginAgain = loginMenu();
+                currentUser = loginMenu(currentUser);
             }
 
 
@@ -40,7 +41,7 @@ namespace ncaa_grad_info
 
 
         // LOGIN Primary Menu
-        public static int loginMenu()
+        public static User loginMenu(User currentUser)
         {
             Console.Clear();
             PrintLn("************************* LOGIN MENU **************************");
@@ -52,17 +53,18 @@ namespace ncaa_grad_info
 
             if (choice == "1")
             {
-                User currentUser = LogMeIn();
-                return 0;
+                currentUser = LogMeIn();
+                return currentUser;
             }
             else if (choice == "2")
             {
-                RegisterMe();
-                return 0;
+                currentUser = RegisterMe();
+                return currentUser;
             }
             else
             {
-                return 1;
+                currentUser.Session = 0;
+                return currentUser;
             }
         }
 
