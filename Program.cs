@@ -53,12 +53,12 @@ namespace ncaa_grad_info
 
             if (choice == "1")
             {
-                currentUser = LogMeIn();
+                currentUser = LogMeIn(currentUser);
                 return currentUser;
             }
             else if (choice == "2")
             {
-                currentUser = RegisterMe();
+                currentUser = RegisterMe(currentUser);
                 return currentUser;
             }
             else
@@ -66,6 +66,28 @@ namespace ncaa_grad_info
                 currentUser.Session = 0;
                 return currentUser;
             }
+
+
+
+
+        }
+
+        // Log In Existing User
+        private static User LogMeIn(User currentUser)
+        {
+            // create a new database connection:
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=user.db");
+
+            // open the connection:
+            sqlite_conn.Open();
+
+            return currentUser;
+        }
+
+        // Register a new user
+        private static User RegisterMe(User currentUser)
+        {
+            return currentUser;
         }
 
 
