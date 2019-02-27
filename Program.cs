@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,13 @@ namespace ncaa_grad_info
         // MAIN
         static void Main(string[] args)
         {
+            
+            while (currentUser.session == 0 || currentUser == null)
+            {
+                loginAgain = loginMenu();
+            }
+
+
             int again = 1;
             while (again == 1)
             {
@@ -27,6 +35,41 @@ namespace ncaa_grad_info
         {
             Console.WriteLine(text);
         }
+
+
+
+
+        // LOGIN Primary Menu
+        public static int loginMenu()
+        {
+            Console.Clear();
+            PrintLn("************************* LOGIN MENU **************************");
+            PrintLn("1. LogIn");
+            PrintLn("2. Register");
+            
+            PrintLn("");
+            string choice = Console.ReadLine();
+
+            if (choice == "1")
+            {
+                User currentUser = LogMeIn();
+                return 0;
+            }
+            else if (choice == "2")
+            {
+                RegisterMe();
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+
+
+
+
 
         // Prints menu and interprets user's choice
         public static int MainMenu()
