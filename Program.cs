@@ -118,11 +118,28 @@ namespace ncaa_grad_info
             string nameFirst = Console.ReadLine();
             PrintLn("Enter Your Last Name: ");
             string nameLast = Console.ReadLine();
-            PrintLn("Enter a Password: ");
-            string pswd = PSWDBlank();
 
-            PrintLn("Please, Confirm Your Password: ");
-            string pswdConfirm = PSWDBlank();
+            int nomatch = 1;
+            while (nomatch == 1)
+            {
+                PrintLn("Enter a Password: ");
+                string pswd = PSWDBlank();
+
+                PrintLn("Please, Confirm Your Password: ");
+                string pswdConfirm = PSWDBlank();
+                if(pswd == pswdConfirm)
+                {
+                    nomatch = 0;
+                }
+                else
+                {
+                    PrintLn("Passwords do not match. Try again.");
+                    PrintLn("Press any key to continue.");
+                    Console.ReadKey();
+                    nomatch = 1;
+                }
+
+            }
 
             // create a new database connection:
             SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=user.db");
