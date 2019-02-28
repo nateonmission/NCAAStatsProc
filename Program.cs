@@ -37,7 +37,29 @@ namespace ncaa_grad_info
             Console.WriteLine(text);
         }
 
+        // Supresses echoing the password
+        public static string PSWDBlank()
+        {
+            StringBuilder passwordBuilder = new StringBuilder();
+            bool continueReading = true;
+            char newLineChar = '\r';
+            while (continueReading)
+            {
+                ConsoleKeyInfo consoleKeyInfo = Console.ReadKey(true);
+                char passwordChar = consoleKeyInfo.KeyChar;
 
+                if (passwordChar == newLineChar)
+                {
+                    continueReading = false;
+                }
+                else
+                {
+                    passwordBuilder.Append(passwordChar.ToString());
+                }
+            }
+
+            return passwordBuilder.ToString();
+        }
 
 
         // LOGIN Primary Menu
@@ -87,6 +109,27 @@ namespace ncaa_grad_info
         // Register a new user
         private static User RegisterMe(User currentUser)
         {
+            Console.Clear();
+            PrintLn("*********************** Registration ************************");
+            PrintLn("");
+            PrintLn("Enter a username: ");
+            string username = Console.ReadLine();
+            PrintLn("Enter Your First Name: ");
+            string nameFirst = Console.ReadLine();
+            PrintLn("Enter Your Last Name: ");
+            string nameLast = Console.ReadLine();
+            PrintLn("Enter a Password: ");
+            string pswd = PSWDBlank();
+
+            PrintLn("Please, Confirm Your Password: ");
+            string pswdConfirm = PSWDBlank();
+
+            // create a new database connection:
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=user.db");
+
+            // open the connection:
+            sqlite_conn.Open();
+
             return currentUser;
         }
 
