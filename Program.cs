@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Security.Cryptography;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,8 +63,71 @@ namespace ncaa_grad_info
         }
 
 
-        // LOGIN Primary Menu
-        public static User loginMenu(User currentUser)
+
+
+
+        public static string ComputeHash(string plainText)
+        {
+            // Generate a random number for the size of the salt.
+            int minSaltSize = 4;
+            int maxSaltSize = 8;
+            Random random = new Random();
+            int saltSize = random.Next(minSaltSize, maxSaltSize);
+
+            // Allocate a byte array, which will hold the salt.
+            byte[] saltBytes = new byte[saltSize];
+
+            // Initialize a random number generator.
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+
+            // Fill the salt with cryptographically strong byte values.
+            rng.GetNonZeroBytes(saltBytes);
+
+            // Convert plain text into a byte array.
+            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+
+            // Allocate array, which will hold plain text and salt.
+            byte[] plainTextWithSaltBytes =
+                    new byte[plainTextBytes.Length + saltBytes.Length];
+
+            // Copy plain text bytes into resulting array.
+            for (int i = 0; i < plainTextBytes.Length; i++)
+                plainTextWithSaltBytes[i] = plainTextBytes[i];
+
+            // Append salt bytes to the resulting array.
+            for (int i = 0; i < saltBytes.Length; i++)
+                plainTextWithSaltBytes[plainTextBytes.Length + i] = saltBytes[i];
+
+            HashAlgorithm hash = new SHA256Managed();
+
+            // Compute hash value of our plain text with appended salt.
+            byte[] hashBytes = hash.ComputeHash(plainTextWithSaltBytes);
+
+            // Create array which will hold hash and original salt bytes.
+            byte[] hashWithSaltBytes = new byte[hashBytes.Length +
+                                                saltBytes.Length];
+
+            // Copy hash bytes into resulting array.
+            for (int i = 0; i < hashBytes.Length; i++)
+                hashWithSaltBytes[i] = hashBytes[i];
+
+            // Append salt bytes to the result.
+            for (int i = 0; i < saltBytes.Length; i++)
+                hashWithSaltBytes[hashBytes.Length + i] = saltBytes[i];
+
+            // Convert result into a base64-encoded string.
+            string hashValue = Convert.ToBase64String(hashWithSaltBytes);
+
+            return hashValue;
+        }
+
+
+
+
+
+
+            // LOGIN Primary Menu
+            public static User loginMenu(User currentUser)
         {
             Console.Clear();
             PrintLn("************************* LOGIN MENU **************************");
@@ -114,16 +178,19 @@ namespace ncaa_grad_info
             PrintLn("");
             PrintLn("Enter a username: ");
             string username = Console.ReadLine();
+
             PrintLn("Enter Your First Name: ");
             string nameFirst = Console.ReadLine();
+
             PrintLn("Enter Your Last Name: ");
             string nameLast = Console.ReadLine();
 
+            string pswd = "";
             int nomatch = 1;
             while (nomatch == 1)
             {
                 PrintLn("Enter a Password: ");
-                string pswd = PSWDBlank();
+                pswd = PSWDBlank();
 
                 PrintLn("Please, Confirm Your Password: ");
                 string pswdConfirm = PSWDBlank();
@@ -140,12 +207,19 @@ namespace ncaa_grad_info
                 }
 
             }
+            pswd = ComputeHash(pswd);
 
+            string ffc = "temp";
+            string fpc = "temp";
+            
             // create a new database connection:
             SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=user.db");
 
             // open the connection:
             sqlite_conn.Open();
+
+            string sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values (" + username + ", " + nameFirst + ", " + nameLast + ", " + pswd + ", " + ffc + ", " + fpc + ")";
+            SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn);
 
             return currentUser;
         }
