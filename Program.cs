@@ -222,8 +222,25 @@ namespace ncaa_grad_info
             int nomatch = 1;
             while (nomatch == 1)
             {
-                PrintLn("Enter a Password (no echo): ");
-                pswd = PSWDBlank();
+                int pswdRepeat = 1;
+                while (pswdRepeat == 1)
+                {
+                    PrintLn("Enter a Password (no echo): ");
+                    pswd = PSWDBlank();
+
+                    if (pswd == "")
+                    {
+                        PrintLn("");
+                        PrintLn("The Pasword CANNOT be NULL!");
+                        PrintLn("Press Any Key To Continue!");
+                        Console.ReadKey();
+                        pswdRepeat = 1;
+                    }
+                    else
+                    {
+                        pswdRepeat = 0;
+                    }
+                }
 
                 PrintLn("Please, Confirm Your Password (no echo): ");
                 string pswdConfirm = PSWDBlank();
