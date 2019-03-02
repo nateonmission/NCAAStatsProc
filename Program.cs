@@ -77,14 +77,8 @@ namespace ncaa_grad_info
             int maxSaltSize = 8;
             Random random = new Random();
             int saltSize = random.Next(minSaltSize, maxSaltSize);
-
-            // Allocate a byte array, which will hold the salt.
             byte[] saltBytes = new byte[saltSize];
-
-            // Initialize a random number generator.
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-
-            // Fill the salt with cryptographically strong byte values.
             rng.GetNonZeroBytes(saltBytes);
 
             // Convert plain text into a byte array.
@@ -108,8 +102,7 @@ namespace ncaa_grad_info
             byte[] hashBytes = hash.ComputeHash(plainTextWithSaltBytes);
 
             // Create array which will hold hash and original salt bytes.
-            byte[] hashWithSaltBytes = new byte[hashBytes.Length +
-                                                saltBytes.Length];
+            byte[] hashWithSaltBytes = new byte[hashBytes.Length + saltBytes.Length];
 
             // Copy hash bytes into resulting array.
             for (int i = 0; i < hashBytes.Length; i++)
@@ -119,7 +112,6 @@ namespace ncaa_grad_info
             for (int i = 0; i < saltBytes.Length; i++)
                 hashWithSaltBytes[hashBytes.Length + i] = saltBytes[i];
 
-            // Convert result into a base64-encoded string.
             string hashValue = Convert.ToBase64String(hashWithSaltBytes);
 
             return hashValue;
@@ -180,8 +172,35 @@ namespace ncaa_grad_info
             Console.Clear();
             PrintLn("*********************** Registration ************************");
             PrintLn("");
-            PrintLn("Enter a username: ");
-            string username = Console.ReadLine();
+
+            string username = "";
+
+            // Open the DB
+            string sql ="";
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db");
+            sqlite_conn.Open();
+
+            int userRepeat = 1;
+            while (userRepeat == 1)
+            {
+                PrintLn("Enter a username: ");
+                username = Console.ReadLine();
+
+                SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn);
+                command.CommandText = "SELECT count(username) from users WHERE username = '" + username + "';";
+                command.CommandType = System.Data.CommandType.Text;
+                int RowCount = 0;
+                RowCount = Convert.ToInt32(command.ExecuteScalar());
+                if (RowCount > 0)
+                {
+                    PrintLn("");
+                    PrintLn("That Username Is Taken. Select Another!");
+                    PrintLn("Press Any Key To Continue!");
+                    Console.ReadKey();
+                    userRepeat = 1;
+                }
+                else { userRepeat = 0; }
+            }
 
             PrintLn("Enter Your First Name: ");
             string nameFirst = Console.ReadLine();
@@ -193,10 +212,10 @@ namespace ncaa_grad_info
             int nomatch = 1;
             while (nomatch == 1)
             {
-                PrintLn("Enter a Password: ");
+                PrintLn("Enter a Password (no echo): ");
                 pswd = PSWDBlank();
 
-                PrintLn("Please, Confirm Your Password: ");
+                PrintLn("Please, Confirm Your Password (no echo): ");
                 string pswdConfirm = PSWDBlank();
                 if(pswd == pswdConfirm)
                 {
@@ -216,12 +235,10 @@ namespace ncaa_grad_info
             string ffc = "temp";
             string fpc = "temp";
             
-            // Work the DB
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db");
-            sqlite_conn.Open();
-            string sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('" + username + "', '" + nameFirst + "', '" + nameLast + "', '" + pswd + "', '" + ffc + "', '" + fpc + "');";
-            SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn);
-            command.ExecuteNonQuery();
+            // Save to the DB
+            sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('" + username + "', '" + nameFirst + "', '" + nameLast + "', '" + pswd + "', '" + ffc + "', '" + fpc + "');";
+            SQLiteCommand addNewUser = new SQLiteCommand(sql, sqlite_conn);
+            addNewUser.ExecuteNonQuery();
             sqlite_conn.Close();
 
             // Build the User
