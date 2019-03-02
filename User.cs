@@ -13,6 +13,7 @@ namespace ncaa_grad_info
         public string NameLast { get; set; }
         public string FavPrimaryConf { get; set; }
         public string FavFootballConf { get; set; }
+        public int LoggedIn { get; set; }
         public int Session { get; set; }
     }
 }

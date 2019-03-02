@@ -19,16 +19,20 @@ namespace ncaa_grad_info
         {
             User currentUser = new User();
             currentUser.Session = 0;
+            currentUser.LoggedIn = 0;
+
             while (currentUser.Session == 0)
             {
-                currentUser = loginMenu(currentUser);
-            }
+                while (currentUser.LoggedIn == 0)
+                {
+                    currentUser = loginMenu(currentUser);
+                }
 
-
-            int again = 1;
-            while (again == 1)
-            {
-                again = MainMenu();
+                int again = 1;
+                while (again == 1 && currentUser.LoggedIn == 1)
+                {
+                    again = MainMenu();
+                }
             }
         }
 
@@ -212,28 +216,23 @@ namespace ncaa_grad_info
             string ffc = "temp";
             string fpc = "temp";
             
-            // create a new database connection:
+            // Work the DB
             SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db");
-
-            // open the connection:
             sqlite_conn.Open();
-
             string sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('" + username + "', '" + nameFirst + "', '" + nameLast + "', '" + pswd + "', '" + ffc + "', '" + fpc + "');";
-            //string sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('nate', 'Nathan', 'Allen', 'PSWD', 'FFC', 'fpc')";
             SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn);
-            //sqlite_conn.Close();
-
-
-            //SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
-
-            //sqlite_cmd.CommandText = "INSERT INTO test (id, text) VALUES (1, 'Hello World');";
-
             command.ExecuteNonQuery();
+            sqlite_conn.Close();
 
+            // Build the User
+            currentUser.Username = username;
+            currentUser.NameFirst = nameFirst;
+            currentUser.NameLast = nameLast;
+            currentUser.FavFootballConf = ffc;
+            currentUser.FavPrimaryConf = fpc;
+            currentUser.LoggedIn = 1;
+            currentUser.Session = 1;
 
-            PrintLn(sql);
-
-            Console.ReadKey();
             return currentUser;
         }
 
