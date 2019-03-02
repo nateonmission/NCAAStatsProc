@@ -185,21 +185,31 @@ namespace ncaa_grad_info
             {
                 PrintLn("Enter a username: ");
                 username = Console.ReadLine();
-
-                SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn);
-                command.CommandText = "SELECT count(username) from users WHERE username = '" + username + "';";
-                command.CommandType = System.Data.CommandType.Text;
-                int RowCount = 0;
-                RowCount = Convert.ToInt32(command.ExecuteScalar());
-                if (RowCount > 0)
+                if (username == "")
                 {
                     PrintLn("");
-                    PrintLn("That Username Is Taken. Select Another!");
+                    PrintLn("That Username CANNOT be NULL!");
                     PrintLn("Press Any Key To Continue!");
                     Console.ReadKey();
                     userRepeat = 1;
                 }
-                else { userRepeat = 0; }
+                else
+                {
+                    SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn);
+                    command.CommandText = "SELECT count(username) from users WHERE username = '" + username + "';";
+                    command.CommandType = System.Data.CommandType.Text;
+                    int RowCount = 0;
+                    RowCount = Convert.ToInt32(command.ExecuteScalar());
+                    if (RowCount > 0)
+                    {
+                        PrintLn("");
+                        PrintLn("That Username Is Taken. Select Another!");
+                        PrintLn("Press Any Key To Continue!");
+                        Console.ReadKey();
+                        userRepeat = 1;
+                    }
+                    else { userRepeat = 0; }
+                }
             }
 
             PrintLn("Enter Your First Name: ");
