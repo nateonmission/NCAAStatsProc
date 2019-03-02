@@ -213,14 +213,27 @@ namespace ncaa_grad_info
             string fpc = "temp";
             
             // create a new database connection:
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=user.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db");
 
             // open the connection:
             sqlite_conn.Open();
 
-            string sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values (" + username + ", " + nameFirst + ", " + nameLast + ", " + pswd + ", " + ffc + ", " + fpc + ")";
+            string sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('" + username + "', '" + nameFirst + "', '" + nameLast + "', '" + pswd + "', '" + ffc + "', '" + fpc + "');";
+            //string sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('nate', 'Nathan', 'Allen', 'PSWD', 'FFC', 'fpc')";
             SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn);
+            //sqlite_conn.Close();
 
+
+            //SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+
+            //sqlite_cmd.CommandText = "INSERT INTO test (id, text) VALUES (1, 'Hello World');";
+
+            command.ExecuteNonQuery();
+
+
+            PrintLn(sql);
+
+            Console.ReadKey();
             return currentUser;
         }
 
