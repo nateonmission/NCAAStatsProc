@@ -36,12 +36,16 @@ namespace ncaa_grad_info
             }
         }
 
+
+        // UTILITIES
         // My PRINT function, because I'm lazy
         public static void PrintLn(string text)
         {
             Console.WriteLine(text);
         }
 
+
+        // REGISTRATION
         // Supresses echoing the password
         public static string PSWDBlank()
         {
@@ -143,9 +147,6 @@ namespace ncaa_grad_info
             }
 
         }
-
-
-
 
         // LOGIN Primary Menu
         public static User loginMenu(User currentUser)
@@ -361,11 +362,54 @@ namespace ncaa_grad_info
             return currentUser;
         }
 
+        // Edit User
+        private static User EditUser(User currentUser)
+        {
+            return currentUser;
+        }
+
+        // Delete User
+        private static User DeleteUser(User currentUser)
+        {
+            Console.Clear();
+            PrintLn("*********************** DELETE USER ************************");
+            PrintLn("");
+            PrintLn("");
+            PrintLn("*** ARE YOU SURE YOU WANT TO DELETE THE CURRENT USER? ***");
+            PrintLn("");
+            PrintLn("*** TYPE 'Y' TO CONFIRM OR ANY OTHER KEY TO CANCEL ***");
+            PrintLn("");
+
+            string deleteSelect = Console.ReadLine().ToUpper();
+            if (deleteSelect == "Y")
+            {
+                // Delete from the DB
+                string sql = "";
+                SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db");
+                sqlite_conn.Open();
+                sql = "DELETE FROM users WHERE username = '" + currentUser.Username + "';";
+                SQLiteCommand addNewUser = new SQLiteCommand(sql, sqlite_conn);
+                addNewUser.ExecuteNonQuery();
+                sqlite_conn.Close();
+
+                currentUser.Username = "";
+                currentUser.NameFirst = "";
+                currentUser.NameLast = "";
+                currentUser.FavFootballConf = "";
+                currentUser.FavPrimaryConf = "";
+                currentUser.LoggedIn = 0;
+                currentUser.Session = 0;
+
+                return currentUser;
+            }
+            else
+            {
+                return currentUser;
+            }
+        }
 
 
-
-
-
+        // PRIMARY FUNCTIONALITY
         // Prints menu and interprets user's choice
         public static int MainMenu(User currentUser)
         {
@@ -402,6 +446,16 @@ namespace ncaa_grad_info
             {
                 GetStats(4, currentUser.FavPrimaryConf);
                 return 1;
+            }
+            else if(choice =="6")
+            {
+                EditUser(currentUser);
+                return 1;
+            }
+            else if (choice == "7")
+            {
+                DeleteUser(currentUser);
+                return 0;
             }
             else if (choice == "9")
             {
