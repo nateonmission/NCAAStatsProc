@@ -4,9 +4,9 @@ using System.Data.SQLite;
 using System.Security.Cryptography;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using System.IO;
-using System.Globalization;
+//using System.Globalization;
 using System.Reflection;
 using Newtonsoft.Json;
 
@@ -66,10 +66,7 @@ namespace ncaa_grad_info
             return passwordBuilder.ToString();
         }
 
-
-
-
-
+        // Generates Salted Hash for Password
         public static string ComputeHash(string plainText)
         {
             // Generate a random number for the size of the salt.
@@ -117,13 +114,41 @@ namespace ncaa_grad_info
             return hashValue;
         }
 
+        // Generates and displays a list of Football conferences from the CSV
+        public static string GetConf(int conf)
+        {
+            int confField = conf;
+            Console.Clear();
+            PrintLn("********************* Football Conf. Menu **********************");
+            List<string> footballConfList = PrintSubMenu(GetField(confField));
+            int maxValue = footballConfList.Count();
+            PrintLn("Enter the number of your selection." + "\r\n");
+            string footballConfSelection = Console.ReadLine();
+
+            Int32.TryParse(footballConfSelection, out int number);
+            if (number <= maxValue && number > 0)
+            {
+                int confType = confField;
+                PrintLn(footballConfList.ElementAt(number - 1));
+                string selectedConf = footballConfList.ElementAt(number - 1);
+
+                return selectedConf;
+            }
+            else
+            {
+                PrintLn("I do not understand. Let's try that again...");
+                PrintLn("Press any key to continue");
+                Console.ReadKey();
+                return "0";
+            }
+
+        }
 
 
 
 
-
-            // LOGIN Primary Menu
-            public static User loginMenu(User currentUser)
+        // LOGIN Primary Menu
+        public static User loginMenu(User currentUser)
         {
             Console.Clear();
             PrintLn("************************* LOGIN MENU **************************");
@@ -185,10 +210,10 @@ namespace ncaa_grad_info
             {
                 PrintLn("Enter a username: ");
                 username = Console.ReadLine();
-                if (username == "")
+                if (username == "" || !(System.Text.RegularExpressions.Regex.IsMatch(username, @"^[a-zA-Z0-9\n\r]+$")))
                 {
                     PrintLn("");
-                    PrintLn("That Username CANNOT be NULL!");
+                    PrintLn("You must use Letters and/or Numbers, only!");
                     PrintLn("Press Any Key To Continue!");
                     Console.ReadKey();
                     userRepeat = 1;
@@ -212,11 +237,47 @@ namespace ncaa_grad_info
                 }
             }
 
-            PrintLn("Enter Your First Name: ");
-            string nameFirst = Console.ReadLine();
+            string nameFirst = "";
+            int name1Repeat = 1;
+            while (name1Repeat == 1)
+            {
+                PrintLn("Enter Your First Name: ");
+                nameFirst = Console.ReadLine();
+                if (nameFirst == "" || !(System.Text.RegularExpressions.Regex.IsMatch(nameFirst, @"^[a-zA-Z0-9\n\r]+$")))
+                {
+                    PrintLn("");
+                    PrintLn("You must use Letters and/or Numbers, only!");
+                    PrintLn("Press Any Key To Continue!");
+                    Console.ReadKey();
+                    name1Repeat = 1;
+                }
+                else
+                {
+                    name1Repeat = 0;
+                }
+            }
 
-            PrintLn("Enter Your Last Name: ");
-            string nameLast = Console.ReadLine();
+            string nameLast = "";
+            int name2Repeat = 1;
+            while (name2Repeat == 1)
+            {
+                PrintLn("");
+                PrintLn("Enter Your Last Name: ");
+                nameLast = Console.ReadLine();
+                if (nameLast == "" || !(System.Text.RegularExpressions.Regex.IsMatch(nameLast, @"^[a-zA-Z0-9\n\r]+$")))
+                {
+                    PrintLn("");
+                    PrintLn("You must use Letters and/or Numbers, only!");
+                    PrintLn("Press Any Key To Continue!");
+                    Console.ReadKey();
+                    name2Repeat = 1;
+                }
+                else
+                {
+                    name2Repeat = 0;
+                }
+
+            }
 
             string pswd = "";
             int nomatch = 1;
@@ -225,23 +286,24 @@ namespace ncaa_grad_info
                 int pswdRepeat = 1;
                 while (pswdRepeat == 1)
                 {
+                    PrintLn("");
                     PrintLn("Enter a Password (no echo): ");
                     pswd = PSWDBlank();
 
-                    if (pswd == "")
+                    if (pswd == "" || !(System.Text.RegularExpressions.Regex.IsMatch(pswd, @"^[a-zA-Z0-9\n\r]+$")))
                     {
                         PrintLn("");
-                        PrintLn("The Pasword CANNOT be NULL!");
+                        PrintLn("You must use Letters and/or Numbers, only!");
                         PrintLn("Press Any Key To Continue!");
                         Console.ReadKey();
-                        pswdRepeat = 1;
+                        userRepeat = 1;
                     }
                     else
                     {
                         pswdRepeat = 0;
                     }
                 }
-
+                PrintLn("");
                 PrintLn("Please, Confirm Your Password (no echo): ");
                 string pswdConfirm = PSWDBlank();
                 if(pswd == pswdConfirm)
@@ -259,8 +321,27 @@ namespace ncaa_grad_info
             }
             pswd = ComputeHash(pswd);
 
-            string ffc = "temp";
-            string fpc = "temp";
+            string ffc = "";
+            int ffcRepeat = 1;
+            while (ffcRepeat == 1)
+            {
+                ffc = GetConf(5);
+                if(ffc == "0")
+                { continue; }
+                else
+                { ffcRepeat = 0; }
+            }
+
+            string fpc = "";
+            int fpcRepeat = 1;
+            while (fpcRepeat == 1)
+            {
+                fpc = GetConf(4);
+                if (fpc == "0")
+                { continue; }
+                else
+                { fpcRepeat = 0; }
+            }
             
             // Save to the DB
             sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('" + username + "', '" + nameFirst + "', '" + nameLast + "', '" + pswd + "', '" + ffc + "', '" + fpc + "');";
@@ -326,12 +407,14 @@ namespace ncaa_grad_info
         // Generates and displays a list of Football conferences from the CSV
         public static int DisplayMenuFootball()
         {
+            int confField = 5;
             Console.Clear();
             PrintLn("********************* Football Conf. Menu **********************");
-            List<string> footballConfList = PrintSubMenu(GetField(5));
+            List<string> footballConfList = PrintSubMenu(GetField(confField));
             int maxValue = footballConfList.Count();
             PrintLn("Enter the number of your selection or 'B' to return to the main menu." + "\r\n");
             string footballConfSelection = Console.ReadLine();
+
             Int32.TryParse(footballConfSelection, out int number);
             if (footballConfSelection.ToUpper() == "B")
             {
@@ -340,7 +423,7 @@ namespace ncaa_grad_info
 
             else if (number <= maxValue && number > 0)
             {
-                int confType = 5;
+                int confType = confField;
                 PrintLn(footballConfList.ElementAt(number - 1));
                 string selectedConf = footballConfList.ElementAt(number - 1);
 
@@ -348,7 +431,7 @@ namespace ncaa_grad_info
                 string currentDirectory = Directory.GetCurrentDirectory();
                 DirectoryInfo directory = new DirectoryInfo(currentDirectory);
                 var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
-                List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf, confType);
+                List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf, confField);
 
                 Conference NCAAConfData = AggregateConfData(NCAACollegeData, selectedConf);
 
@@ -377,7 +460,6 @@ namespace ncaa_grad_info
             string primaryConfSelection = Console.ReadLine();
             PrintLn(primaryConfSelection);
         }
-
 
         // FileReader
         public static string ReadFile(string fileName)
