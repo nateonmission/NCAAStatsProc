@@ -31,7 +31,7 @@ namespace ncaa_grad_info
                 int again = 1;
                 while (again == 1 && currentUser.LoggedIn == 1)
                 {
-                    again = MainMenu();
+                    again = MainMenu(currentUser);
                 }
             }
         }
@@ -367,16 +367,17 @@ namespace ncaa_grad_info
 
 
         // Prints menu and interprets user's choice
-        public static int MainMenu()
+        public static int MainMenu(User currentUser)
         {
             Console.Clear();
             PrintLn("************************* MAIN MENU **************************");
             PrintLn("1. Display Individual School Stats by Football Conference");
             PrintLn("2. Display Individual School Stats by Primary Conference");
-            PrintLn("3. Display Favorite Conferences");
+            PrintLn("3. Display Favorite Football Conference");
+            PrintLn("4. Display Favorite Primary Conference");
             PrintLn("...");
-            PrintLn("6. Create Profile");
-            PrintLn("7. Edit Profile");
+            PrintLn("6. Edit Profile");
+            PrintLn("7. Delete Profile");
             PrintLn("...");
             PrintLn("9. Quit");
             PrintLn("");
@@ -384,12 +385,22 @@ namespace ncaa_grad_info
 
             if (choice == "1")
             {
-                DisplayMenuFootball();
+                GetStats(5);
                 return 1;
             }
             else if (choice == "2")
             {
-                DisplayMenuPrimary();
+                GetStats(4);
+                return 1;
+            }
+            else if (choice == "3")
+            {
+                GetStats(5, currentUser.FavFootballConf);
+                return 1;
+            }
+            else if (choice == "4")
+            {
+                GetStats(4, currentUser.FavPrimaryConf);
                 return 1;
             }
             else if (choice == "9")
@@ -404,61 +415,36 @@ namespace ncaa_grad_info
 
         }
 
-        // Generates and displays a list of Football conferences from the CSV
-        public static int DisplayMenuFootball()
-        {
-            int confField = 5;
-            Console.Clear();
-            PrintLn("********************* Football Conf. Menu **********************");
-            List<string> footballConfList = PrintSubMenu(GetField(confField));
-            int maxValue = footballConfList.Count();
-            PrintLn("Enter the number of your selection or 'B' to return to the main menu." + "\r\n");
-            string footballConfSelection = Console.ReadLine();
+        // Generates and displays statistics from the CSV
+        public static int GetStats(int confField)
+        {            
+            string selectedConf = GetConf(confField);
 
-            Int32.TryParse(footballConfSelection, out int number);
-            if (footballConfSelection.ToUpper() == "B")
-            {
-                return 0;
-            }
+            string currentDirectory = Directory.GetCurrentDirectory();
+            DirectoryInfo directory = new DirectoryInfo(currentDirectory);
+            var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
+            List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf, confField);
+            Conference NCAAConfData = AggregateConfData(NCAACollegeData, selectedConf);
 
-            else if (number <= maxValue && number > 0)
-            {
-                int confType = confField;
-                PrintLn(footballConfList.ElementAt(number - 1));
-                string selectedConf = footballConfList.ElementAt(number - 1);
+            DisplayConfData(NCAAConfData);
 
-
-                string currentDirectory = Directory.GetCurrentDirectory();
-                DirectoryInfo directory = new DirectoryInfo(currentDirectory);
-                var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
-                List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf, confField);
-
-                Conference NCAAConfData = AggregateConfData(NCAACollegeData, selectedConf);
-
-                DisplayConfData(NCAAConfData);
-
-                Console.ReadKey();
-                return 0;
-            }
-            else
-            {
-                PrintLn("I do not understand. Let's try that again...");
-                PrintLn("Press any key to continue");
-                Console.ReadKey();
-                return 0;
-            }
-
+            Console.ReadKey();
+            return 0;
         }
 
-        // Generates and displays a list of Primary conferences from the CSV
-        public static void DisplayMenuPrimary()
+        // Generates and displays statistics from the CSV
+        public static int GetStats(int confField, string selectedConf)
         {
-            Console.Clear();
-            PrintLn("********************* Primanry Conf. Menu **********************");
-            PrintSubMenu(GetField(4));
-            PrintLn("Enter the number of your selection or 'B' to return to the main menu." + "\r\n");
-            string primaryConfSelection = Console.ReadLine();
-            PrintLn(primaryConfSelection);
+            string currentDirectory = Directory.GetCurrentDirectory();
+            DirectoryInfo directory = new DirectoryInfo(currentDirectory);
+            var fileName = Path.Combine(directory.FullName, "ncaadata.csv");
+            List<College> NCAACollegeData = ReadCollegeData(fileName, selectedConf, confField);
+            Conference NCAAConfData = AggregateConfData(NCAACollegeData, selectedConf);
+
+            DisplayConfData(NCAAConfData);
+
+            Console.ReadKey();
+            return 0;
         }
 
         // FileReader
