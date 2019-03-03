@@ -14,8 +14,6 @@ namespace ncaa_grad_info
 {
     class Program
     {
-
-
         // MAIN
         static void Main(string[] args)
         {
@@ -77,10 +75,8 @@ namespace ncaa_grad_info
         public static string ComputeHash(string plainText)
         {
             // Generate a random number for the size of the salt.
-            int minSaltSize = 4;
-            int maxSaltSize = 8;
             Random random = new Random();
-            int saltSize = random.Next(minSaltSize, maxSaltSize);
+            int saltSize = 8;
             byte[] saltBytes = new byte[saltSize];
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
             rng.GetNonZeroBytes(saltBytes);
@@ -121,8 +117,44 @@ namespace ncaa_grad_info
             return hashValue;
         }
 
-        // Generates and displays a list of Football conferences from the CSV
-        public static string GetConf(int conf)
+        public static bool VerifyHash(string plainText, string hashValue)
+        {
+            // Convert base64-encoded hash value into a byte array.
+            byte[] hashWithSaltBytes = Convert.FromBase64String(hashValue);
+
+            // We must know size of hash (without salt).
+            int hashSizeInBits, hashSizeInBytes;
+
+             hashSizeInBits = 256;
+                  
+            // Convert size of hash from bits to bytes.
+            hashSizeInBytes = hashSizeInBits / 8;
+
+            // Make sure that the specified hash value is long enough.
+            if (hashWithSaltBytes.Length < hashSizeInBytes)
+                return false;
+
+            // Allocate array to hold original salt bytes retrieved from hash.
+            byte[] saltBytes = new byte[hashWithSaltBytes.Length -
+                                        hashSizeInBytes];
+
+            // Copy salt from the end of the hash to the new array.
+            for (int i = 0; i < saltBytes.Length; i++)
+                saltBytes[i] = hashWithSaltBytes[hashSizeInBytes + i];
+
+            // Compute a new hash string.
+            string expectedHashString =
+                        ComputeHash(plainText);
+
+            // If the computed hash matches the specified hash,
+            // the plain text value must be correct.
+            return (hashValue == expectedHashString);
+        }
+    
+
+
+    // Generates and displays a list of Football conferences from the CSV
+    public static string GetConf(int conf)
         {
             int confField = conf;
             Console.Clear();
@@ -164,7 +196,7 @@ namespace ncaa_grad_info
 
             if (choice == "1")
             {
-                currentUser = LogMeIn(currentUser);
+                currentUser = LogMeIn(currentUser, sqlPath);
                 return currentUser;
             }
             else if (choice == "2")
@@ -184,16 +216,68 @@ namespace ncaa_grad_info
         }
 
         // Log In Existing User
-        private static User LogMeIn(User currentUser)
+        private static User LogMeIn(User currentUser, string sqlPath)
         {
-            // create a new database connection:
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=user.db");
+            Console.Clear();
+            PrintLn("*********************** LOGIN ************************");
+            PrintLn("");
 
-            // open the connection:
+            string username = "";
+
+            // Open the DB
+            string sql = "";
+            SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
             sqlite_conn.Open();
 
-            return currentUser;
+            int userRepeat = 1;
+            while (userRepeat == 1)
+            {
+                PrintLn("Enter your username: ");
+                username = Console.ReadLine();
+                if (username == "" || !(System.Text.RegularExpressions.Regex.IsMatch(username, @"^[a-zA-Z0-9\n\r]+$")))
+                {
+                    PrintLn("");
+                    PrintLn("You must use Letters and/or Numbers, only!");
+                    PrintLn("Press Any Key To Continue!");
+                    Console.ReadKey();
+                    userRepeat = 1;
+                }
+                else { userRepeat = 0; }
+            }
+
+            string pswd = "";
+            int pswdRepeat = 1;
+            while (pswdRepeat == 1)
+            {
+                PrintLn("");
+                PrintLn("Enter your Password (no echo): ");
+                pswd = PSWDBlank();
+
+                if (pswd == "" || !(System.Text.RegularExpressions.Regex.IsMatch(pswd, @"^[a-zA-Z0-9\n\r]+$")))
+                {
+                    PrintLn("");
+                    PrintLn("You must use Letters and/or Numbers, only!");
+                    PrintLn("Press Any Key To Continue!");
+                    Console.ReadKey();
+                    pswdRepeat = 1;
+                }
+                else
+                {
+                    pswdRepeat = 0;
+                }
+            }
+
+
+
+
+
+
+             return currentUser;
         }
+
+
+
+
 
         // Register a new user
         private static User RegisterMe(User currentUser, string sqlPath)
