@@ -365,6 +365,26 @@ namespace ncaa_grad_info
         // Edit User
         private static User EditUser(User currentUser)
         {
+            Console.Clear();
+            PrintLn("*********************** EDIT USER ************************");
+            PrintLn("");
+            PrintLn("Username: " + currentUser.Username);
+            PrintLn("");
+            PrintLn("First Name: " + currentUser.NameFirst);
+            PrintLn("Last Name: " + currentUser.NameLast);
+            PrintLn("");
+            PrintLn("Favorite Football Conference: ");
+            PrintLn(currentUser.FavFootballConf);
+            PrintLn("");
+            PrintLn("Favorite Primary Conference: ");
+            PrintLn(currentUser.FavPrimaryConf);
+            PrintLn("");
+            PrintLn("");
+            PrintLn("");
+            PrintLn("");
+            PrintLn("");
+
+
             return currentUser;
         }
 
