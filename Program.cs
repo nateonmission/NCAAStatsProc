@@ -14,9 +14,12 @@ namespace ncaa_grad_info
 {
     class Program
     {
+
+
         // MAIN
         static void Main(string[] args)
         {
+            string sqlPath = "Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db";
             User currentUser = new User();
             currentUser.Session = 0;
             currentUser.LoggedIn = 0;
@@ -25,13 +28,13 @@ namespace ncaa_grad_info
             {
                 while (currentUser.LoggedIn == 0)
                 {
-                    currentUser = loginMenu(currentUser);
+                    currentUser = loginMenu(currentUser, sqlPath);
                 }
 
                 int again = 1;
                 while (again == 1 && currentUser.LoggedIn == 1)
                 {
-                    again = MainMenu(currentUser);
+                    again = MainMenu(currentUser, sqlPath);
                 }
             }
         }
@@ -149,7 +152,7 @@ namespace ncaa_grad_info
         }
 
         // LOGIN Primary Menu
-        public static User loginMenu(User currentUser)
+        public static User loginMenu(User currentUser, string sqlPath)
         {
             Console.Clear();
             PrintLn("************************* LOGIN MENU **************************");
@@ -166,7 +169,7 @@ namespace ncaa_grad_info
             }
             else if (choice == "2")
             {
-                currentUser = RegisterMe(currentUser);
+                currentUser = RegisterMe(currentUser, sqlPath);
                 return currentUser;
             }
             else
@@ -193,7 +196,7 @@ namespace ncaa_grad_info
         }
 
         // Register a new user
-        private static User RegisterMe(User currentUser)
+        private static User RegisterMe(User currentUser, string sqlPath)
         {
             Console.Clear();
             PrintLn("*********************** Registration ************************");
@@ -203,7 +206,7 @@ namespace ncaa_grad_info
 
             // Open the DB
             string sql ="";
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db");
+            SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
             sqlite_conn.Open();
 
             int userRepeat = 1;
@@ -363,7 +366,7 @@ namespace ncaa_grad_info
         }
 
         // Edit User
-        private static User EditUser(User currentUser)
+        private static User EditUser(User currentUser, string sqlPath)
         {
             Console.Clear();
             PrintLn("*********************** EDIT USER ************************");
@@ -380,16 +383,111 @@ namespace ncaa_grad_info
             PrintLn(currentUser.FavPrimaryConf);
             PrintLn("");
             PrintLn("");
+            PrintLn("*** ARE YOU SURE YOU WANT TO EDIT THE CURRENT USER? ***");
             PrintLn("");
-            PrintLn("");
+            PrintLn("*** TYPE 'Y' TO CONFIRM OR ANY OTHER KEY TO CANCEL ***");
             PrintLn("");
 
+            string editSelect = Console.ReadLine().ToUpper();
+            if (editSelect == "Y")
+            {
+                string nameFirst = "";
+                int name1Repeat = 1;
+                while (name1Repeat == 1)
+                {
+                    PrintLn("Enter Your First Name: ");
+                    nameFirst = Console.ReadLine();
+                    if (nameFirst == "" || !(System.Text.RegularExpressions.Regex.IsMatch(nameFirst, @"^[a-zA-Z0-9\n\r]+$")))
+                    {
+                        PrintLn("");
+                        PrintLn("You must use Letters and/or Numbers, only!");
+                        PrintLn("Press Any Key To Continue!");
+                        Console.ReadKey();
+                        name1Repeat = 1;
+                    }
+                    else
+                    {
+                        name1Repeat = 0;
+                    }
+                }
 
-            return currentUser;
+                string nameLast = "";
+                int name2Repeat = 1;
+                while (name2Repeat == 1)
+                {
+                    PrintLn("");
+                    PrintLn("Enter Your Last Name: ");
+                    nameLast = Console.ReadLine();
+                    if (nameLast == "" || !(System.Text.RegularExpressions.Regex.IsMatch(nameLast, @"^[a-zA-Z0-9\n\r]+$")))
+                    {
+                        PrintLn("");
+                        PrintLn("You must use Letters and/or Numbers, only!");
+                        PrintLn("Press Any Key To Continue!");
+                        Console.ReadKey();
+                        name2Repeat = 1;
+                    }
+                    else
+                    {
+                        name2Repeat = 0;
+                    }
+
+                }
+
+                string ffc = "";
+                int ffcRepeat = 1;
+                while (ffcRepeat == 1)
+                {
+                    ffc = GetConf(5);
+                    if (ffc == "0")
+                    { continue; }
+                    else
+                    { ffcRepeat = 0; }
+                }
+
+                string fpc = "";
+                int fpcRepeat = 1;
+                while (fpcRepeat == 1)
+                {
+                    fpc = GetConf(4);
+                    if (fpc == "0")
+                    { continue; }
+                    else
+                    { fpcRepeat = 0; }
+                }
+
+                // Open the DB
+                string sql = "";
+                SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
+                sqlite_conn.Open();
+                // Save to the DB
+                sql = "UPDATE 'users' SET 'NameFirst'='" + nameFirst + "', 'NameLast'='" + nameLast + "', 'FavFootballConf'='" + ffc + "', 'FavPrimaryConf'='" + fpc + "' WHERE 'username'='" + currentUser.Username + "';";
+                SQLiteCommand editUser = new SQLiteCommand(sql, sqlite_conn);
+                PrintLn(sql);
+                editUser.ExecuteNonQuery();
+                sqlite_conn.Close();
+
+                // Build the User
+                currentUser.NameFirst = nameFirst;
+                currentUser.NameLast = nameLast;
+                currentUser.FavFootballConf = ffc;
+                currentUser.FavPrimaryConf = fpc;
+                currentUser.LoggedIn = 1;
+                currentUser.Session = 1;
+
+                return currentUser;
+
+
+            }
+            else
+            {
+                return currentUser;
+            }
+
+
         }
 
         // Delete User
-        private static User DeleteUser(User currentUser)
+        private static User DeleteUser(User currentUser, string sqlPath)
         {
             Console.Clear();
             PrintLn("*********************** DELETE USER ************************");
@@ -405,7 +503,7 @@ namespace ncaa_grad_info
             {
                 // Delete from the DB
                 string sql = "";
-                SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db");
+                SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
                 sqlite_conn.Open();
                 sql = "DELETE FROM users WHERE username = '" + currentUser.Username + "';";
                 SQLiteCommand addNewUser = new SQLiteCommand(sql, sqlite_conn);
@@ -431,7 +529,7 @@ namespace ncaa_grad_info
 
         // PRIMARY FUNCTIONALITY
         // Prints menu and interprets user's choice
-        public static int MainMenu(User currentUser)
+        public static int MainMenu(User currentUser, string sqlPath)
         {
             Console.Clear();
             PrintLn("************************* MAIN MENU **************************");
@@ -469,12 +567,12 @@ namespace ncaa_grad_info
             }
             else if(choice =="6")
             {
-                EditUser(currentUser);
+                EditUser(currentUser, sqlPath);
                 return 1;
             }
             else if (choice == "7")
             {
-                DeleteUser(currentUser);
+                DeleteUser(currentUser, sqlPath);
                 return 0;
             }
             else if (choice == "9")
