@@ -9,6 +9,7 @@ using System.IO;
 //using System.Globalization;
 using System.Reflection;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace ncaa_grad_info
 {
@@ -46,7 +47,7 @@ namespace ncaa_grad_info
         }
 
 
-        // REGISTRATION
+        // REGISTRATION (Hashing function from www.obviex.com/samples/hash.aspx)
         // Supresses echoing the password
         public static string PSWDBlank()
         {
@@ -72,14 +73,28 @@ namespace ncaa_grad_info
         }
 
         // Generates Salted Hash for Password
-        public static string ComputeHash(string plainText)
+        public static string ComputeHash(string plainText, string hashAlgorithm, byte[] saltBytes)
         {
-            // Generate a random number for the size of the salt.
-            Random random = new Random();
-            int saltSize = 8;
-            byte[] saltBytes = new byte[saltSize];
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            rng.GetNonZeroBytes(saltBytes);
+            // If salt is not specified, generate it on the fly.
+            if (saltBytes == null)
+            {
+                // Define min and max salt sizes.
+                int minSaltSize = 4;
+                int maxSaltSize = 8;
+
+                // Generate a random number for the size of the salt.
+                Random random = new Random();
+                int saltSize = random.Next(minSaltSize, maxSaltSize);
+
+                // Allocate a byte array, which will hold the salt.
+                saltBytes = new byte[saltSize];
+
+                // Initialize a random number generator.
+                RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+
+                // Fill the salt with cryptographically strong byte values.
+                rng.GetNonZeroBytes(saltBytes);
+            }
 
             // Convert plain text into a byte array.
             byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -96,13 +111,45 @@ namespace ncaa_grad_info
             for (int i = 0; i < saltBytes.Length; i++)
                 plainTextWithSaltBytes[plainTextBytes.Length + i] = saltBytes[i];
 
-            HashAlgorithm hash = new SHA256Managed();
+            // Because we support multiple hashing algorithms, we must define
+            // hash object as a common (abstract) base class. We will specify the
+            // actual hashing algorithm class later during object creation.
+            HashAlgorithm hash;
+
+            // Make sure hashing algorithm name is specified.
+            if (hashAlgorithm == null)
+                hashAlgorithm = "";
+
+            // Initialize appropriate hashing algorithm class.
+            switch (hashAlgorithm.ToUpper())
+            {
+                case "SHA1":
+                    hash = new SHA1Managed();
+                    break;
+
+                case "SHA256":
+                    hash = new SHA256Managed();
+                    break;
+
+                case "SHA384":
+                    hash = new SHA384Managed();
+                    break;
+
+                case "SHA512":
+                    hash = new SHA512Managed();
+                    break;
+
+                default:
+                    hash = new MD5CryptoServiceProvider();
+                    break;
+            }
 
             // Compute hash value of our plain text with appended salt.
             byte[] hashBytes = hash.ComputeHash(plainTextWithSaltBytes);
 
             // Create array which will hold hash and original salt bytes.
-            byte[] hashWithSaltBytes = new byte[hashBytes.Length + saltBytes.Length];
+            byte[] hashWithSaltBytes = new byte[hashBytes.Length +
+                                                saltBytes.Length];
 
             // Copy hash bytes into resulting array.
             for (int i = 0; i < hashBytes.Length; i++)
@@ -112,12 +159,15 @@ namespace ncaa_grad_info
             for (int i = 0; i < saltBytes.Length; i++)
                 hashWithSaltBytes[hashBytes.Length + i] = saltBytes[i];
 
+            // Convert result into a base64-encoded string.
             string hashValue = Convert.ToBase64String(hashWithSaltBytes);
 
+            // Return the result.
             return hashValue;
         }
 
-        public static bool VerifyHash(string plainText, string hashValue)
+        // Verifies Hash for logging in
+        public static bool VerifyHash(string plainText, string hashAlgorithm, string hashValue)
         {
             // Convert base64-encoded hash value into a byte array.
             byte[] hashWithSaltBytes = Convert.FromBase64String(hashValue);
@@ -125,8 +175,34 @@ namespace ncaa_grad_info
             // We must know size of hash (without salt).
             int hashSizeInBits, hashSizeInBytes;
 
-             hashSizeInBits = 256;
-                  
+            // Make sure that hashing algorithm name is specified.
+            if (hashAlgorithm == null)
+                hashAlgorithm = "";
+
+            // Size of hash is based on the specified algorithm.
+            switch (hashAlgorithm.ToUpper())
+            {
+                case "SHA1":
+                    hashSizeInBits = 160;
+                    break;
+
+                case "SHA256":
+                    hashSizeInBits = 256;
+                    break;
+
+                case "SHA384":
+                    hashSizeInBits = 384;
+                    break;
+
+                case "SHA512":
+                    hashSizeInBits = 512;
+                    break;
+
+                default: // Must be MD5
+                    hashSizeInBits = 128;
+                    break;
+            }
+
             // Convert size of hash from bits to bytes.
             hashSizeInBytes = hashSizeInBits / 8;
 
@@ -144,45 +220,13 @@ namespace ncaa_grad_info
 
             // Compute a new hash string.
             string expectedHashString =
-                        ComputeHash(plainText);
+                        ComputeHash(plainText, hashAlgorithm, saltBytes);
 
             // If the computed hash matches the specified hash,
             // the plain text value must be correct.
             return (hashValue == expectedHashString);
         }
     
-
-
-    // Generates and displays a list of Football conferences from the CSV
-    public static string GetConf(int conf)
-        {
-            int confField = conf;
-            Console.Clear();
-            PrintLn("********************* Football Conf. Menu **********************");
-            List<string> footballConfList = PrintSubMenu(GetField(confField));
-            int maxValue = footballConfList.Count();
-            PrintLn("Enter the number of your selection." + "\r\n");
-            string footballConfSelection = Console.ReadLine();
-
-            Int32.TryParse(footballConfSelection, out int number);
-            if (number <= maxValue && number > 0)
-            {
-                int confType = confField;
-                PrintLn(footballConfList.ElementAt(number - 1));
-                string selectedConf = footballConfList.ElementAt(number - 1);
-
-                return selectedConf;
-            }
-            else
-            {
-                PrintLn("I do not understand. Let's try that again...");
-                PrintLn("Press any key to continue");
-                Console.ReadKey();
-                return "0";
-            }
-
-        }
-
         // LOGIN Primary Menu
         public static User loginMenu(User currentUser, string sqlPath)
         {
@@ -223,11 +267,8 @@ namespace ncaa_grad_info
             PrintLn("");
 
             string username = "";
+            string pswd = "";
 
-            // Open the DB
-            string sql = "";
-            SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
-            sqlite_conn.Open();
 
             int userRepeat = 1;
             while (userRepeat == 1)
@@ -245,7 +286,7 @@ namespace ncaa_grad_info
                 else { userRepeat = 0; }
             }
 
-            string pswd = "";
+
             int pswdRepeat = 1;
             while (pswdRepeat == 1)
             {
@@ -268,16 +309,61 @@ namespace ncaa_grad_info
             }
 
 
+            // Open the DB
+            string sql = "";
+            string dbHash = "";
+            SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
+            sqlite_conn.Open();
+            sql = "SELECT PSWDHash FROM users WHERE username='" + username + "';";
 
+            using (SQLiteCommand cmd = sqlite_conn.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.Parameters.Add(new SQLiteParameter("@username") { Value = username });
+                cmd.CommandType = System.Data.CommandType.Text;
 
+                SQLiteDataReader reader;
+                reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    dbHash = Convert.ToString(reader["PSWDHash"]);
+                }
+            }
 
+            if (VerifyHash(pswd, "SHA256" ,dbHash))
+            {
+                using (SQLiteCommand cmd = sqlite_conn.CreateCommand())
+                {
+                    sql = "SELECT * FROM users WHERE username='" + username + "';";
+                    cmd.CommandText = sql;
+                    cmd.Parameters.Add(new SQLiteParameter("@username") { Value = username });
+                    cmd.CommandType = System.Data.CommandType.Text;
 
-             return currentUser;
+                    SQLiteDataReader reader;
+                    reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+
+                        currentUser.Username = Convert.ToString(reader["username"]);
+                        currentUser.NameFirst = Convert.ToString(reader["NameFirst"]);
+                        currentUser.NameLast = Convert.ToString(reader["NameLast"]);
+                        currentUser.FavPrimaryConf = Convert.ToString(reader["FavFootballConf"]);
+                        currentUser.FavFootballConf = Convert.ToString(reader["FavPrimaryConf"]);
+                        currentUser.LoggedIn = 1;
+                        currentUser.Session = 1;
+                    }
+                }
+
+                return currentUser;
+            }
+            else
+            {
+                currentUser.LoggedIn = 0;
+                currentUser.Session = 0;
+
+                return currentUser;
+            }
         }
-
-
-
-
 
         // Register a new user
         private static User RegisterMe(User currentUser, string sqlPath)
@@ -407,7 +493,8 @@ namespace ncaa_grad_info
                 }
 
             }
-            pswd = ComputeHash(pswd);
+            var saltBytes = new byte[8];
+            pswd = ComputeHash(pswd, "SHA256", saltBytes);
 
             string ffc = "";
             int ffcRepeat = 1;
@@ -667,6 +754,36 @@ namespace ncaa_grad_info
             else
             {
                 return 1;
+            }
+
+        }
+
+        // Generates and displays a list of Football conferences from the CSV
+        public static string GetConf(int conf)
+        {
+            int confField = conf;
+            Console.Clear();
+            PrintLn("********************* Football Conf. Menu **********************");
+            List<string> footballConfList = PrintSubMenu(GetField(confField));
+            int maxValue = footballConfList.Count();
+            PrintLn("Enter the number of your selection." + "\r\n");
+            string footballConfSelection = Console.ReadLine();
+
+            Int32.TryParse(footballConfSelection, out int number);
+            if (number <= maxValue && number > 0)
+            {
+                int confType = confField;
+                PrintLn(footballConfList.ElementAt(number - 1));
+                string selectedConf = footballConfList.ElementAt(number - 1);
+
+                return selectedConf;
+            }
+            else
+            {
+                PrintLn("I do not understand. Let's try that again...");
+                PrintLn("Press any key to continue");
+                Console.ReadKey();
+                return "0";
             }
 
         }
@@ -1241,6 +1358,13 @@ namespace ncaa_grad_info
             {
                 Console.WriteLine("{0} = {1}", prop.Name, prop.GetValue(NCAAConfData, null));
             }
+
+            PrintLn("Press Any Key To Write To JSON File");
+            Console.ReadKey();
+            string NCAA_Conf_JSON = JsonConvert.SerializeObject(NCAAConfData);
+            string fileName = ".\\NCAA-" + NCAAConfData.ChosenConf + ".JSON";
+            File.WriteAllText(fileName, NCAA_Conf_JSON);
+            Process.Start("notepad.exe", fileName);
 
         }
 
