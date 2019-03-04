@@ -4,9 +4,7 @@ using System.Data.SQLite;
 using System.Security.Cryptography;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
 using System.IO;
-//using System.Globalization;
 using System.Reflection;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -18,7 +16,7 @@ namespace ncaa_grad_info
         // MAIN
         static void Main(string[] args)
         {
-            string sqlPath = "Data Source=D:\\projects\\csharp\\ncaa-grad-info\\ncaa-grad-info\\ncaa-grad-info\\user.db";
+            string sqlPath = "Data Source=.\\user.db";
             User currentUser = new User();
             currentUser.Session = 0;
             currentUser.LoggedIn = 0;
@@ -307,7 +305,6 @@ namespace ncaa_grad_info
                     pswdRepeat = 0;
                 }
             }
-
 
             // Open the DB
             string sql = "";

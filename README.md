@@ -1,7 +1,7 @@
 #NCAA STAT PROCESSOR
 ----
 
-This console application takes a CSV file, aquired from the NCAA website, and aggrigates and averages the College-level data for the athletic conference chosen by the user. 
+This console application reads a CSV file, aquired from the NCAA website, then aggrigates and averages the data from the College-level for the athletic conference chosen by the user. It is then saved as a JSON file.
 
 ##Dependenacies
 This C# application makes use of SQLite, LINQ, and its ADO.net provider for the user registration and statistical functions.
