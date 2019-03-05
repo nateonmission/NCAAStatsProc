@@ -45,7 +45,7 @@ namespace ncaa_grad_info
         }
 
 
-        // REGISTRATION (Hashing function from www.obviex.com/samples/hash.aspx)
+        // REGISTRATION (Hashing function from www.obviex.com/samples/hash.aspx under the GNUv3)
         // Supresses echoing the password
         public static string PSWDBlank()
         {
@@ -539,7 +539,7 @@ namespace ncaa_grad_info
             Console.Clear();
             PrintLn("*********************** EDIT USER ************************");
             PrintLn("");
-            PrintLn("Username: " + currentUser.Username);
+            PrintLn("Username: " + currentUser.Username + "   <----Cannot Be Changed");
             PrintLn("");
             PrintLn("First Name: " + currentUser.NameFirst);
             PrintLn("Last Name: " + currentUser.NameLast);
@@ -549,6 +549,8 @@ namespace ncaa_grad_info
             PrintLn("");
             PrintLn("Favorite Primary Conference: ");
             PrintLn(currentUser.FavPrimaryConf);
+            PrintLn("");
+            PrintLn("Password: ********");
             PrintLn("");
             PrintLn("");
             PrintLn("*** ARE YOU SURE YOU WANT TO EDIT THE CURRENT USER? ***");
