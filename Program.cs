@@ -25,7 +25,7 @@ namespace ncaa_grad_info
             {
                 while (currentUser.LoggedIn == 0)
                 {
-                    currentUser = loginMenu(currentUser, sqlPath);
+                    currentUser = LoginMenu(currentUser, sqlPath);
                 }
 
                 int again = 1;
@@ -226,7 +226,7 @@ namespace ncaa_grad_info
         }
     
         // LOGIN Primary Menu
-        public static User loginMenu(User currentUser, string sqlPath)
+        public static User LoginMenu(User currentUser, string sqlPath)
         {
             Console.Clear();
             PrintLn("************************* LOGIN MENU **************************");
