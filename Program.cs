@@ -798,7 +798,6 @@ namespace ncaa_grad_info
 
             DisplayConfData(NCAAConfData);
 
-            Console.ReadKey();
             return 0;
         }
 
@@ -813,7 +812,6 @@ namespace ncaa_grad_info
 
             DisplayConfData(NCAAConfData);
 
-            Console.ReadKey();
             return 0;
         }
 
@@ -1346,7 +1344,7 @@ namespace ncaa_grad_info
         }
 
         // Dispay Aggregate Statistics for Conference
-        public static void DisplayConfData(Conference NCAAConfData)
+        public static int DisplayConfData(Conference NCAAConfData)
         {
             Console.Clear();
             PrintLn("******************** " + NCAAConfData.ChosenConf + " ********************");
@@ -1356,14 +1354,20 @@ namespace ncaa_grad_info
                 Console.WriteLine("{0} = {1}", prop.Name, prop.GetValue(NCAAConfData, null));
             }
 
-            PrintLn("Press Any Key To Write To JSON File");
-            Console.ReadKey();
-            string NCAA_Conf_JSON = JsonConvert.SerializeObject(NCAAConfData);
-            string fileName = ".\\NCAA-" + NCAAConfData.ChosenConf + ".JSON";
-            File.WriteAllText(fileName, NCAA_Conf_JSON);
-            Process.Start("notepad.exe", fileName);
+            PrintLn("Press 'S' Key To Write To JSON File Or Any Other Key To Return To Main Menu:");
+            string choice = Console.ReadLine();
+            if (choice.ToUpper() == "S")
+            {
+                string NCAA_Conf_JSON = JsonConvert.SerializeObject(NCAAConfData);
+                string fileName = ".\\NCAA-" + NCAAConfData.ChosenConf + ".JSON";
+                File.WriteAllText(fileName, NCAA_Conf_JSON);
+                Process.Start("notepad.exe", fileName);
+                return 0;
+            }
+            else
+            { return 0; }
 
         }
-
+ 
     }
 }
