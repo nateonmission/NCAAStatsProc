@@ -16,7 +16,7 @@ namespace ncaa_grad_info
         // MAIN
         static void Main(string[] args)
         {
-            string sqlPath = "Data Source=.\\user.db";
+            string[] settings = { "Data Source=.\\user.db", "SHA256", "8"};
             User currentUser = new User();
             currentUser.Session = 0;
             currentUser.LoggedIn = 0;
@@ -25,13 +25,13 @@ namespace ncaa_grad_info
             {
                 while (currentUser.LoggedIn == 0)
                 {
-                    currentUser = LoginMenu(currentUser, sqlPath);
+                    currentUser = LoginMenu(currentUser, settings);
                 }
 
                 int again = 1;
                 while (again == 1 && currentUser.LoggedIn == 1)
                 {
-                    again = MainMenu(currentUser, sqlPath);
+                    again = MainMenu(currentUser, settings);
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace ncaa_grad_info
         }
 
         // Generates Salted Hash for Password
-        public static string ComputeHash(string plainText, string hashAlgorithm, byte[] saltBytes)
+        public static string ComputeHash(string plainText, string[] settings, byte[] saltBytes)
         {
             // If salt is not specified, generate it on the fly.
             if (saltBytes == null)
@@ -115,11 +115,11 @@ namespace ncaa_grad_info
             HashAlgorithm hash;
 
             // Make sure hashing algorithm name is specified.
-            if (hashAlgorithm == null)
-                hashAlgorithm = "";
+            if (settings[1] == null)
+                settings[1] = "";
 
             // Initialize appropriate hashing algorithm class.
-            switch (hashAlgorithm.ToUpper())
+            switch (settings[1].ToUpper())
             {
                 case "SHA1":
                     hash = new SHA1Managed();
@@ -165,7 +165,7 @@ namespace ncaa_grad_info
         }
 
         // Verifies Hash for logging in
-        public static bool VerifyHash(string plainText, string hashAlgorithm, string hashValue)
+        public static bool VerifyHash(string plainText, string[] settings, string hashValue)
         {
             // Convert base64-encoded hash value into a byte array.
             byte[] hashWithSaltBytes = Convert.FromBase64String(hashValue);
@@ -174,11 +174,11 @@ namespace ncaa_grad_info
             int hashSizeInBits, hashSizeInBytes;
 
             // Make sure that hashing algorithm name is specified.
-            if (hashAlgorithm == null)
-                hashAlgorithm = "";
+            if (settings[1] == null)
+                settings[1] = "";
 
             // Size of hash is based on the specified algorithm.
-            switch (hashAlgorithm.ToUpper())
+            switch (settings[1].ToUpper())
             {
                 case "SHA1":
                     hashSizeInBits = 160;
@@ -218,7 +218,7 @@ namespace ncaa_grad_info
 
             // Compute a new hash string.
             string expectedHashString =
-                        ComputeHash(plainText, hashAlgorithm, saltBytes);
+                        ComputeHash(plainText, settings, saltBytes);
 
             // If the computed hash matches the specified hash,
             // the plain text value must be correct.
@@ -226,7 +226,7 @@ namespace ncaa_grad_info
         }
     
         // LOGIN Primary Menu
-        public static User LoginMenu(User currentUser, string sqlPath)
+        public static User LoginMenu(User currentUser, string[] settings)
         {
             Console.Clear();
             PrintLn("************************* LOGIN MENU **************************");
@@ -238,12 +238,12 @@ namespace ncaa_grad_info
 
             if (choice == "1")
             {
-                currentUser = LogMeIn(currentUser, sqlPath);
+                currentUser = LogMeIn(currentUser, settings);
                 return currentUser;
             }
             else if (choice == "2")
             {
-                currentUser = RegisterMe(currentUser, sqlPath);
+                currentUser = RegisterMe(currentUser, settings);
                 return currentUser;
             }
             else
@@ -258,7 +258,7 @@ namespace ncaa_grad_info
         }
 
         // Log In Existing User
-        private static User LogMeIn(User currentUser, string sqlPath)
+        private static User LogMeIn(User currentUser, string[] settings)
         {
             Console.Clear();
             PrintLn("*********************** LOGIN ************************");
@@ -309,7 +309,7 @@ namespace ncaa_grad_info
             // Open the DB
             string sql = "";
             string dbHash = "";
-            SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
+            SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]);
             sqlite_conn.Open();
             sql = "SELECT PSWDHash FROM users WHERE username='" + username + "';";
 
@@ -327,7 +327,7 @@ namespace ncaa_grad_info
                 }
             }
 
-            if (VerifyHash(pswd, "SHA256" ,dbHash))
+            if (VerifyHash(pswd, settings ,dbHash))
             {
                 using (SQLiteCommand cmd = sqlite_conn.CreateCommand())
                 {
@@ -363,7 +363,7 @@ namespace ncaa_grad_info
         }
 
         // Register a new user
-        private static User RegisterMe(User currentUser, string sqlPath)
+        private static User RegisterMe(User currentUser, string[] settings)
         {
             Console.Clear();
             PrintLn("*********************** Registration ************************");
@@ -373,7 +373,7 @@ namespace ncaa_grad_info
 
             // Open the DB
             string sql ="";
-            SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
+            SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]);
             sqlite_conn.Open();
 
             int userRepeat = 1;
@@ -490,8 +490,9 @@ namespace ncaa_grad_info
                 }
 
             }
-            var saltBytes = new byte[8];
-            pswd = ComputeHash(pswd, "SHA256", saltBytes);
+            int parseInt = Int32.Parse(settings[2]);
+            var saltBytes = new byte[parseInt];
+            pswd = ComputeHash(pswd, settings, saltBytes);
 
             string ffc = "";
             int ffcRepeat = 1;
@@ -534,7 +535,7 @@ namespace ncaa_grad_info
         }
 
         // Edit User
-        private static User EditUser(User currentUser, string sqlPath)
+        private static User EditUser(User currentUser, string[] settings)
         {
             Console.Clear();
             PrintLn("*********************** EDIT USER ************************");
@@ -627,7 +628,7 @@ namespace ncaa_grad_info
 
                 // Open the DB
                 string sql = "";
-                SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
+                SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]);
                 sqlite_conn.Open();
                 // Save to the DB
                 sql = "UPDATE 'users' SET 'NameFirst'='" + nameFirst + "', 'NameLast'='" + nameLast + "', 'FavFootballConf'='" + ffc + "', 'FavPrimaryConf'='" + fpc + "' WHERE 'username'='" + currentUser.Username + "';";
@@ -657,7 +658,7 @@ namespace ncaa_grad_info
         }
 
         // Delete User
-        private static User DeleteUser(User currentUser, string sqlPath)
+        private static User DeleteUser(User currentUser, string[] settings)
         {
             Console.Clear();
             PrintLn("*********************** DELETE USER ************************");
@@ -673,7 +674,7 @@ namespace ncaa_grad_info
             {
                 // Delete from the DB
                 string sql = "";
-                SQLiteConnection sqlite_conn = new SQLiteConnection(sqlPath);
+                SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]);
                 sqlite_conn.Open();
                 sql = "DELETE FROM users WHERE username = '" + currentUser.Username + "';";
                 SQLiteCommand addNewUser = new SQLiteCommand(sql, sqlite_conn);
@@ -699,7 +700,7 @@ namespace ncaa_grad_info
 
         // PRIMARY FUNCTIONALITY
         // Prints menu and interprets user's choice
-        public static int MainMenu(User currentUser, string sqlPath)
+        public static int MainMenu(User currentUser, string[] settings)
         {
             Console.Clear();
             PrintLn("************************* MAIN MENU **************************");
@@ -737,12 +738,12 @@ namespace ncaa_grad_info
             }
             else if(choice =="6")
             {
-                EditUser(currentUser, sqlPath);
+                EditUser(currentUser, settings);
                 return 1;
             }
             else if (choice == "7")
             {
-                DeleteUser(currentUser, sqlPath);
+                DeleteUser(currentUser, settings);
                 return 0;
             }
             else if (choice == "9")
