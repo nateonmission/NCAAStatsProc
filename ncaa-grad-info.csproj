@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="College.cs" />
     <Compile Include="Conference.cs" />
+    <Compile Include="ConfMgmt.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
