@@ -98,7 +98,9 @@ namespace ncaa_grad_info
             int confField = conf;
             Console.Clear();
             Console.WriteLine("********************* Football Conf. Menu **********************");
+
             List<string> footballConfList = PrintSubMenu(ConfMgmt.GetField(confField));
+
             int maxValue = footballConfList.Count();
             Console.WriteLine("Enter the number of your selection." + "\r\n");
             string footballConfSelection = Console.ReadLine();

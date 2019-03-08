@@ -44,14 +44,6 @@ namespace ncaa_grad_info
             return 0;
         }
 
-        // FileReader
-        //       public static string ReadFile(string fileName)
-        //       {
-        //           using (var reader = new StreamReader(fileName))
-        //           {
-        //               return reader.ReadToEnd();
-        //           }
-        //       }
 
         // Reads and returns a List<string> of all entries from one column in CSV without repeats or empty strings
         public static List<string> GetField(int field)
