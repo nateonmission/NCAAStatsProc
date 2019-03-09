@@ -2,6 +2,7 @@
 using System.Data.SQLite;
 using System.Security.Cryptography;
 using System.Text;
+using System.Collections.Generic;
 
 namespace ncaa_grad_info
 {
@@ -189,7 +190,7 @@ namespace ncaa_grad_info
         }
 
         // LOGIN Primary Menu
-        public static User LoginMenu(User currentUser, string[] settings)
+        public static User LoginMenu(User currentUser, List<List<string>> confLists, string[] settings)
         {
             Console.Clear();
             Console.WriteLine("************************* LOGIN MENU **************************");
@@ -206,7 +207,7 @@ namespace ncaa_grad_info
             }
             else if (choice == "2")
             {
-                currentUser = RegisterMe(currentUser, settings);
+                currentUser = RegisterMe(currentUser, confLists, settings);
                 return currentUser;
             }
             else
@@ -326,7 +327,7 @@ namespace ncaa_grad_info
         }
 
         // Register a new user
-        public static User RegisterMe(User currentUser, string[] settings)
+        public static User RegisterMe(User currentUser, List<List<string>> confLists, string[] settings)
         {
             Console.Clear();
             Console.WriteLine("*********************** Registration ************************");
@@ -461,7 +462,7 @@ namespace ncaa_grad_info
             int ffcRepeat = 1;
             while (ffcRepeat == 1)
             {
-                ffc = Program.GetConf(5);
+                ffc = Program.GetConf(5, confLists);
                 if (ffc == "0")
                 { continue; }
                 else
@@ -472,7 +473,7 @@ namespace ncaa_grad_info
             int fpcRepeat = 1;
             while (fpcRepeat == 1)
             {
-                fpc = Program.GetConf(4);
+                fpc = Program.GetConf(4, confLists);
                 if (fpc == "0")
                 { continue; }
                 else
@@ -498,7 +499,7 @@ namespace ncaa_grad_info
         }
 
         // Edit User
-        public static User EditUser(User currentUser, string[] settings)
+        public static User EditUser(User currentUser, List<List<string>> confLists, string[] settings)
         {
             Console.Clear();
             Console.WriteLine("*********************** EDIT USER ************************");
@@ -571,7 +572,7 @@ namespace ncaa_grad_info
                 int ffcRepeat = 1;
                 while (ffcRepeat == 1)
                 {
-                    ffc = Program.GetConf(5);
+                    ffc = Program.GetConf(5, confLists);
                     if (ffc == "0")
                     { continue; }
                     else
@@ -582,7 +583,7 @@ namespace ncaa_grad_info
                 int fpcRepeat = 1;
                 while (fpcRepeat == 1)
                 {
-                    fpc = Program.GetConf(4);
+                    fpc = Program.GetConf(4, confLists);
                     if (fpc == "0")
                     { continue; }
                     else

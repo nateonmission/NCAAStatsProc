@@ -10,31 +10,47 @@ namespace ncaa_grad_info
         // MAIN
         static void Main(string[] args)
         {
+            // INITIALIZAION
+            // Array of settings
             string[] settings = { "Data Source=.\\user.db", "SHA256", "8"};
+            // Instantiates the User 
             User currentUser = new User();
             currentUser.Session = 0;
             currentUser.LoggedIn = 0;
+            // Caches conference lists
+            var confLists = BuildConfLists();
 
             while (currentUser.Session == 0)
             {
                 while (currentUser.LoggedIn == 0)
                 {
-                    currentUser = UserMgmt.LoginMenu(currentUser, settings);
+                    currentUser = UserMgmt.LoginMenu(currentUser, confLists, settings);
                 }
 
                 int again = 1;
                 while (again == 1 && currentUser.LoggedIn == 1)
                 {
-                    again = MainMenu(currentUser, settings);
+                    again = MainMenu(currentUser, confLists, settings);
                 }
             }
         }
+
+        // Initiallizes the lists of conferences
+        public static List<List<string>> BuildConfLists()
+        {
+            var confLists = new List<List<string>>();
+            confLists.Add(ConfMgmt.GetField(5));
+            confLists.Add(ConfMgmt.GetField(4));
+
+            return confLists;
+        }
+
 
 
 
         // PRIMARY FUNCTIONALITY
         // Prints menu and interprets user's choice
-        public static int MainMenu(User currentUser, string[] settings)
+        public static int MainMenu(User currentUser, List<List<string>> confLists, string[] settings)
         {
             Console.Clear();
             Console.WriteLine("************************* MAIN MENU **************************");
@@ -52,27 +68,27 @@ namespace ncaa_grad_info
 
             if (choice == "1")
             {
-                ConfMgmt.GetStats(5);
+                ConfMgmt.GetStats(5, confLists);
                 return 1;
             }
             else if (choice == "2")
             {
-                ConfMgmt.GetStats(4);
+                ConfMgmt.GetStats(4, confLists);
                 return 1;
             }
             else if (choice == "3")
             {
-                ConfMgmt.GetStats(5, currentUser.FavFootballConf);
+                ConfMgmt.GetStats(5, currentUser.FavFootballConf, confLists);
                 return 1;
             }
             else if (choice == "4")
             {
-                ConfMgmt.GetStats(4, currentUser.FavPrimaryConf);
+                ConfMgmt.GetStats(4, currentUser.FavPrimaryConf, confLists);
                 return 1;
             }
             else if(choice =="6")
             {
-                UserMgmt.EditUser(currentUser, settings);
+                UserMgmt.EditUser(currentUser, confLists, settings);
                 return 1;
             }
             else if (choice == "7")
@@ -93,13 +109,18 @@ namespace ncaa_grad_info
         }
 
         // Generates and displays a list of Football conferences from the CSV
-        public static string GetConf(int conf)
+        public static string GetConf(int conf, List<List<string>> confLists )
         {
-            int confField = conf;
+            int confIndex = 1;
+            if(conf == 5)
+            {
+                confIndex = 0;
+            }
+            
             Console.Clear();
             Console.WriteLine("********************* Football Conf. Menu **********************");
 
-            List<string> footballConfList = PrintSubMenu(ConfMgmt.GetField(confField));
+            List<string> footballConfList = PrintSubMenu(confLists[confIndex]);
 
             int maxValue = footballConfList.Count();
             Console.WriteLine("Enter the number of your selection." + "\r\n");
@@ -108,8 +129,7 @@ namespace ncaa_grad_info
             Int32.TryParse(footballConfSelection, out int number);
             if (number <= maxValue && number > 0)
             {
-                int confType = confField;
-                Console.WriteLine(footballConfList.ElementAt(number - 1));
+                
                 string selectedConf = footballConfList.ElementAt(number - 1);
 
                 return selectedConf;

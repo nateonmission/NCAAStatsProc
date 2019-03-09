@@ -11,13 +11,10 @@ namespace ncaa_grad_info
 {
     class ConfMgmt
     {
-
-
-
         // Generates and displays statistics from the CSV
-        public static int GetStats(int confField)
+        public static int GetStats(int confField, List<List<string>> confLists)
         {
-            string selectedConf = Program.GetConf(confField);
+            string selectedConf = Program.GetConf(confField, confLists);
 
             string currentDirectory = Directory.GetCurrentDirectory();
             DirectoryInfo directory = new DirectoryInfo(currentDirectory);
@@ -31,7 +28,7 @@ namespace ncaa_grad_info
         }
 
         // Generates and displays statistics from the CSV
-        public static int GetStats(int confField, string selectedConf)
+        public static int GetStats(int confField, string selectedConf, List<List<string>> confLists)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
             DirectoryInfo directory = new DirectoryInfo(currentDirectory);
@@ -43,7 +40,6 @@ namespace ncaa_grad_info
 
             return 0;
         }
-
 
         // Reads and returns a List<string> of all entries from one column in CSV without repeats or empty strings
         public static List<string> GetField(int field)
@@ -66,13 +62,9 @@ namespace ncaa_grad_info
                     {
                         continue;
                     }
-                    else
+                    else if (!fieldValues.Contains(values[field]))
                     {
-                        if (!fieldValues.Contains(values[field]))
-                        {
-                            fieldValues.Add(values[field]);
-
-                        }
+                        fieldValues.Add(values[field]); 
                     }
                 }
             }
