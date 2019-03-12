@@ -11,10 +11,25 @@ namespace ncaa_grad_info
 {
     class ConfMgmt
     {
+        // Initiallizes the lists of conferences
+        public static List<List<string>> BuildConfLists()
+        {
+            var confLists = new List<List<string>>();
+            confLists.Add(ConfMgmt.GetField(5));
+            confLists.Add(ConfMgmt.GetField(4));
+
+            return confLists;
+        }
+
         // Generates and displays statistics from the CSV
         public static int GetStats(int confField, List<List<string>> confLists)
         {
-            string selectedConf = Program.GetConf(confField, confLists);
+
+            string selectedConf = "1";
+            while (selectedConf == "1")
+            {
+                selectedConf = Program.GetConf(confField, confLists);
+            }
 
             string currentDirectory = Directory.GetCurrentDirectory();
             DirectoryInfo directory = new DirectoryInfo(currentDirectory);
@@ -71,7 +86,6 @@ namespace ncaa_grad_info
 
             return fieldValues;
         }
-
 
         // Load CSV data into College Classes and adds then to a List<College>
         public static List<College> ReadCollegeData(string fileName, string selectedConf, int confType)

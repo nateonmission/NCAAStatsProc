@@ -12,13 +12,13 @@ namespace ncaa_grad_info
         {
             // INITIALIZAION
             // Array of settings
-            string[] settings = { "Data Source=.\\user.db", "SHA256", "8"};
+            string[] settings = { "Data Source=.\\user.db", "SHA256", "8" };
             // Instantiates the User 
             User currentUser = new User();
             currentUser.Session = 0;
             currentUser.LoggedIn = 0;
             // Caches conference lists
-            var confLists = BuildConfLists();
+            var confLists = ConfMgmt.BuildConfLists();
 
             while (currentUser.Session == 0)
             {
@@ -34,18 +34,6 @@ namespace ncaa_grad_info
                 }
             }
         }
-
-        // Initiallizes the lists of conferences
-        public static List<List<string>> BuildConfLists()
-        {
-            var confLists = new List<List<string>>();
-            confLists.Add(ConfMgmt.GetField(5));
-            confLists.Add(ConfMgmt.GetField(4));
-
-            return confLists;
-        }
-
-
 
 
         // PRIMARY FUNCTIONALITY
@@ -116,32 +104,38 @@ namespace ncaa_grad_info
             {
                 confIndex = 0;
             }
-            
-            Console.Clear();
-            Console.WriteLine("********************* Football Conf. Menu **********************");
 
-            List<string> footballConfList = PrintSubMenu(confLists[confIndex]);
-
-            int maxValue = footballConfList.Count();
-            Console.WriteLine("Enter the number of your selection." + "\r\n");
-            string footballConfSelection = Console.ReadLine();
-
-            Int32.TryParse(footballConfSelection, out int number);
-            if (number <= maxValue && number > 0)
+            string confTypeStr = "Primary";
+            if(conf == 5)
             {
+                confTypeStr = "Football";
+            }
+
+                Console.Clear();
+                Console.WriteLine("********************* " + confTypeStr + " Conf. Menu **********************");
+
+                List<string> footballConfList = PrintSubMenu(confLists[confIndex]);
+
+                int maxValue = footballConfList.Count();
+                Console.WriteLine("Enter the number of your selection." + "\r\n");
+                string footballConfSelection = Console.ReadLine();
+
+                Int32.TryParse(footballConfSelection, out int number);
+                if (number <= maxValue && number > 0)
+                {
+                    string selectedConf = footballConfList.ElementAt(number - 1);
+                    return selectedConf;
+                    
+                }
+                else
+                {
+                    Console.WriteLine("I do not understand. Let's try that again...");
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey();
+
+                    return "1";
+                }
                 
-                string selectedConf = footballConfList.ElementAt(number - 1);
-
-                return selectedConf;
-            }
-            else
-            {
-                Console.WriteLine("I do not understand. Let's try that again...");
-                Console.WriteLine("Press any key to continue");
-                Console.ReadKey();
-                return "0";
-            }
-
         }
 
         // Prints SubMenues with a selection number

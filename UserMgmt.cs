@@ -215,10 +215,6 @@ namespace ncaa_grad_info
                 currentUser.Session = 0;
                 return currentUser;
             }
-
-
-
-
         }
 
         // Log In Existing User
@@ -273,56 +269,60 @@ namespace ncaa_grad_info
             // Open the DB
             string sql = "";
             string dbHash = "";
-            SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]);
-            sqlite_conn.Open();
-            sql = "SELECT PSWDHash FROM users WHERE username='" + username + "';";
 
-            using (SQLiteCommand cmd = sqlite_conn.CreateCommand())
+            using (SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]))
             {
-                cmd.CommandText = sql;
-                cmd.Parameters.Add(new SQLiteParameter("@username") { Value = username });
-                cmd.CommandType = System.Data.CommandType.Text;
-
-                SQLiteDataReader reader;
-                reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    dbHash = Convert.ToString(reader["PSWDHash"]);
-                }
-            }
-
-            if (VerifyHash(pswd, settings, dbHash))
-            {
+                sqlite_conn.Open();
+                sql = "SELECT PSWDHash FROM users WHERE username='" + username + "';";
                 using (SQLiteCommand cmd = sqlite_conn.CreateCommand())
                 {
-                    sql = "SELECT * FROM users WHERE username='" + username + "';";
                     cmd.CommandText = sql;
                     cmd.Parameters.Add(new SQLiteParameter("@username") { Value = username });
                     cmd.CommandType = System.Data.CommandType.Text;
 
-                    SQLiteDataReader reader;
-                    reader = cmd.ExecuteReader();
-                    if (reader.Read())
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
-
-                        currentUser.Username = Convert.ToString(reader["username"]);
-                        currentUser.NameFirst = Convert.ToString(reader["NameFirst"]);
-                        currentUser.NameLast = Convert.ToString(reader["NameLast"]);
-                        currentUser.FavPrimaryConf = Convert.ToString(reader["FavFootballConf"]);
-                        currentUser.FavFootballConf = Convert.ToString(reader["FavPrimaryConf"]);
-                        currentUser.LoggedIn = 1;
-                        currentUser.Session = 1;
+                        if (reader.Read())
+                        {
+                            dbHash = Convert.ToString(reader["PSWDHash"]);
+                        }
                     }
                 }
 
-                return currentUser;
-            }
-            else
-            {
-                currentUser.LoggedIn = 0;
-                currentUser.Session = 0;
+                if (VerifyHash(pswd, settings, dbHash))
+                {
+                    using (SQLiteCommand cmd = sqlite_conn.CreateCommand())
+                    {
+                        sql = "SELECT * FROM users WHERE username='" + username + "';";
+                        cmd.CommandText = sql;
+                        cmd.Parameters.Add(new SQLiteParameter("@username") { Value = username });
+                        cmd.CommandType = System.Data.CommandType.Text;
 
-                return currentUser;
+                        using (SQLiteDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+
+                                currentUser.Username = Convert.ToString(reader["username"]);
+                                currentUser.NameFirst = Convert.ToString(reader["NameFirst"]);
+                                currentUser.NameLast = Convert.ToString(reader["NameLast"]);
+                                currentUser.FavPrimaryConf = Convert.ToString(reader["FavFootballConf"]);
+                                currentUser.FavFootballConf = Convert.ToString(reader["FavPrimaryConf"]);
+                                currentUser.LoggedIn = 1;
+                                currentUser.Session = 1;
+                            }
+                        }
+                    }
+                    
+                    return currentUser;
+                }
+                else
+                {
+                    currentUser.LoggedIn = 0;
+                    currentUser.Session = 0;
+
+                    return currentUser;
+                }
             }
         }
 
@@ -334,12 +334,6 @@ namespace ncaa_grad_info
             Console.WriteLine("");
 
             string username = "";
-
-            // Open the DB
-            string sql = "";
-            SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]);
-            sqlite_conn.Open();
-
             int userRepeat = 1;
             while (userRepeat == 1)
             {
@@ -354,12 +348,20 @@ namespace ncaa_grad_info
                     userRepeat = 1;
                 }
                 else
-                {
-                    SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn);
-                    command.CommandText = "SELECT count(username) from users WHERE username = '" + username + "';";
-                    command.CommandType = System.Data.CommandType.Text;
+                {             
                     int RowCount = 0;
-                    RowCount = Convert.ToInt32(command.ExecuteScalar());
+                    using (SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]))
+                    {
+                        sqlite_conn.Open();
+                        string sql = "";
+                        using (SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn))
+                        {
+                            command.CommandText = "SELECT count(username) from users WHERE username = '" + username + "';";
+                            command.CommandType = System.Data.CommandType.Text;
+                            RowCount = Convert.ToInt32(command.ExecuteScalar());
+                        }
+                    }
+                                 
                     if (RowCount > 0)
                     {
                         Console.WriteLine("");
@@ -480,11 +482,15 @@ namespace ncaa_grad_info
                 { fpcRepeat = 0; }
             }
 
-            // Save to the DB
-            sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('" + username + "', '" + nameFirst + "', '" + nameLast + "', '" + pswd + "', '" + ffc + "', '" + fpc + "');";
-            SQLiteCommand addNewUser = new SQLiteCommand(sql, sqlite_conn);
-            addNewUser.ExecuteNonQuery();
-            sqlite_conn.Close();
+            using (SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]))
+            {
+                sqlite_conn.Open();
+                string sql = "insert into users (username, NameFirst, NameLast, PSWDHash, FavFootballConf, FavPrimaryConf) values ('" + username + "', '" + nameFirst + "', '" + nameLast + "', '" + pswd + "', '" + ffc + "', '" + fpc + "');";
+                using (SQLiteCommand command = new SQLiteCommand(sql, sqlite_conn))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
 
             // Build the User
             currentUser.Username = username;
@@ -597,7 +603,7 @@ namespace ncaa_grad_info
                 // Save to the DB
                 sql = "UPDATE 'users' SET 'NameFirst'='" + nameFirst + "', 'NameLast'='" + nameLast + "', 'FavFootballConf'='" + ffc + "', 'FavPrimaryConf'='" + fpc + "' WHERE 'username'='" + currentUser.Username + "';";
                 SQLiteCommand editUser = new SQLiteCommand(sql, sqlite_conn);
-                Console.WriteLine(sql);
+
                 editUser.ExecuteNonQuery();
                 sqlite_conn.Close();
 
