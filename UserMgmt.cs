@@ -433,7 +433,7 @@ namespace ncaa_grad_info
                         Console.WriteLine("You must use Letters and/or Numbers, only!");
                         Console.WriteLine("Press Any Key To Continue!");
                         Console.ReadKey();
-                        userRepeat = 1;
+                        pswdRepeat = 1;
                     }
                     else
                     {
@@ -574,6 +574,50 @@ namespace ncaa_grad_info
 
                 }
 
+                string pswd = "";
+                int nomatch = 1;
+                while (nomatch == 1)
+                {
+                    int pswdRepeat = 1;
+                    while (pswdRepeat == 1)
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("Enter a Password (no echo): ");
+                        pswd = PSWDBlank();
+
+                        if (pswd == "" || !(System.Text.RegularExpressions.Regex.IsMatch(pswd, @"^[a-zA-Z0-9\n\r]+$")))
+                        {
+                            Console.WriteLine("");
+                            Console.WriteLine("You must use Letters and/or Numbers, only!");
+                            Console.WriteLine("Press Any Key To Continue!");
+                            Console.ReadKey();
+                            pswdRepeat = 1;
+                        }
+                        else
+                        {
+                            pswdRepeat = 0;
+                        }
+                    }
+                    Console.WriteLine("");
+                    Console.WriteLine("Please, Confirm Your Password (no echo): ");
+                    string pswdConfirm = PSWDBlank();
+                    if (pswd == pswdConfirm)
+                    {
+                        nomatch = 0;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Passwords do not match. Try again.");
+                        Console.WriteLine("Press any key to continue.");
+                        Console.ReadKey();
+                        nomatch = 1;
+                    }
+
+                }
+                int parseInt = Int32.Parse(settings[2]);
+                var saltBytes = new byte[parseInt];
+                pswd = ComputeHash(pswd, settings, saltBytes);
+
                 string ffc = "";
                 int ffcRepeat = 1;
                 while (ffcRepeat == 1)
@@ -598,14 +642,24 @@ namespace ncaa_grad_info
 
                 // Open the DB
                 string sql = "";
-                SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]);
-                sqlite_conn.Open();
-                // Save to the DB
-                sql = "UPDATE 'users' SET 'NameFirst'='" + nameFirst + "', 'NameLast'='" + nameLast + "', 'FavFootballConf'='" + ffc + "', 'FavPrimaryConf'='" + fpc + "' WHERE 'username'='" + currentUser.Username + "';";
-                SQLiteCommand editUser = new SQLiteCommand(sql, sqlite_conn);
+                using (SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]))
+                {
+                    sqlite_conn.Open();
+                    sql = "UPDATE users SET NameFirst= @nameFirst, NameLast= @nameLast, PSWDHash= @pswd, FavFootballConf= @ffc, FavPrimaryConf= @fpc WHERE username= @currentUser ;";
+                    Console.WriteLine(sql);
+                    Console.ReadKey();
+                    using (SQLiteCommand editUser = new SQLiteCommand(sql, sqlite_conn))
+                    {
+                        editUser.Parameters.AddWithValue("@nameFirst", nameFirst);
+                        editUser.Parameters.AddWithValue("@nameLast", nameLast);
+                        editUser.Parameters.AddWithValue("@ffc", ffc);
+                        editUser.Parameters.AddWithValue("@fpc", fpc);
+                        editUser.Parameters.AddWithValue("@pswd", pswd);
+                        editUser.Parameters.AddWithValue("@currentUser", currentUser.Username);
 
-                editUser.ExecuteNonQuery();
-                sqlite_conn.Close();
+                        editUser.ExecuteNonQuery();
+                    }
+                }
 
                 // Build the User
                 currentUser.NameFirst = nameFirst;
@@ -616,15 +670,11 @@ namespace ncaa_grad_info
                 currentUser.Session = 1;
 
                 return currentUser;
-
-
             }
             else
             {
                 return currentUser;
             }
-
-
         }
 
         // Delete User
@@ -644,12 +694,15 @@ namespace ncaa_grad_info
             {
                 // Delete from the DB
                 string sql = "";
-                SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]);
-                sqlite_conn.Open();
-                sql = "DELETE FROM users WHERE username = '" + currentUser.Username + "';";
-                SQLiteCommand addNewUser = new SQLiteCommand(sql, sqlite_conn);
-                addNewUser.ExecuteNonQuery();
-                sqlite_conn.Close();
+                using (SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]))
+                {
+                    sqlite_conn.Open();
+                    sql = "DELETE FROM users WHERE username = '" + currentUser.Username + "';";
+                    using (SQLiteCommand addNewUser = new SQLiteCommand(sql, sqlite_conn))
+                        {
+                            addNewUser.ExecuteNonQuery();                            
+                        }
+                }
 
                 currentUser.Username = "";
                 currentUser.NameFirst = "";
