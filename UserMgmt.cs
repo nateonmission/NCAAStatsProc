@@ -9,7 +9,129 @@ namespace ncaa_grad_info
     class UserMgmt
     {
 
-        // REGISTRATION (Hashing function from www.obviex.com/samples/hash.aspx under the GNUv3)
+        // REGISTRATION
+
+        //Reg. tool-funtions
+        // Registration and Update function
+        public static List<string> GetRegInfo(List<List<string>> confLists, string[] settings)
+        {
+            string nameFirst = "";
+            int name1Repeat = 1;
+            while (name1Repeat == 1)
+            {
+                Console.WriteLine("Enter Your First Name: ");
+                nameFirst = Console.ReadLine();
+                if (nameFirst == "" || !(System.Text.RegularExpressions.Regex.IsMatch(nameFirst, @"^[a-zA-Z0-9\n\r]+$")))
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("You must use Letters and/or Numbers, only!");
+                    Console.WriteLine("Press Any Key To Continue!");
+                    Console.ReadKey();
+                    name1Repeat = 1;
+                }
+                else
+                {
+                    name1Repeat = 0;
+                }
+            }
+
+            string nameLast = "";
+            int name2Repeat = 1;
+            while (name2Repeat == 1)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Enter Your Last Name: ");
+                nameLast = Console.ReadLine();
+                if (nameLast == "" || !(System.Text.RegularExpressions.Regex.IsMatch(nameLast, @"^[a-zA-Z0-9\n\r]+$")))
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("You must use Letters and/or Numbers, only!");
+                    Console.WriteLine("Press Any Key To Continue!");
+                    Console.ReadKey();
+                    name2Repeat = 1;
+                }
+                else
+                {
+                    name2Repeat = 0;
+                }
+
+            }
+
+            string pswd = "";
+            int nomatch = 1;
+            while (nomatch == 1)
+            {
+                int pswdRepeat = 1;
+                while (pswdRepeat == 1)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Enter a Password (no echo): ");
+                    pswd = PSWDBlank();
+
+                    if (pswd == "" || !(System.Text.RegularExpressions.Regex.IsMatch(pswd, @"^[a-zA-Z0-9\n\r]+$")))
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("You must use Letters and/or Numbers, only!");
+                        Console.WriteLine("Press Any Key To Continue!");
+                        Console.ReadKey();
+                        pswdRepeat = 1;
+                    }
+                    else
+                    {
+                        pswdRepeat = 0;
+                    }
+                }
+                Console.WriteLine("");
+                Console.WriteLine("Please, Confirm Your Password (no echo): ");
+                string pswdConfirm = PSWDBlank();
+                if (pswd == pswdConfirm)
+                {
+                    nomatch = 0;
+                }
+                else
+                {
+                    Console.WriteLine("Passwords do not match. Try again.");
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey();
+                    nomatch = 1;
+                }
+
+            }
+            int parseInt = Int32.Parse(settings[2]);
+            var saltBytes = new byte[parseInt];
+            pswd = ComputeHash(pswd, settings, saltBytes);
+
+            string ffc = "";
+            int ffcRepeat = 1;
+            while (ffcRepeat == 1)
+            {
+                ffc = Program.GetConf(5, confLists);
+                if (ffc == "0")
+                { continue; }
+                else
+                { ffcRepeat = 0; }
+            }
+
+            string fpc = "";
+            int fpcRepeat = 1;
+            while (fpcRepeat == 1)
+            {
+                fpc = Program.GetConf(4, confLists);
+                if (fpc == "0")
+                { continue; }
+                else
+                { fpcRepeat = 0; }
+            }
+
+            List<string> RegInfo = new List<string>();
+            RegInfo.Add(nameFirst);
+            RegInfo.Add(nameLast);
+            RegInfo.Add(pswd);
+            RegInfo.Add(ffc);
+            RegInfo.Add(fpc);
+            return RegInfo;
+        }
+
         // Supresses echoing the password
         public static string PSWDBlank()
         {
@@ -34,7 +156,7 @@ namespace ncaa_grad_info
             return passwordBuilder.ToString();
         }
 
-        // Generates Salted Hash for Password
+        // Generates Salted Hash for Password (Hashing function from www.obviex.com/samples/hash.aspx under the GNUv3)
         public static string ComputeHash(string plainText, string[] settings, byte[] saltBytes)
         {
             // If salt is not specified, generate it on the fly.
@@ -128,7 +250,7 @@ namespace ncaa_grad_info
             return hashValue;
         }
 
-        // Verifies Hash for logging in
+        // Verifies Hash for logging in (Hashing function from www.obviex.com/samples/hash.aspx under the GNUv3)
         public static bool VerifyHash(string plainText, string[] settings, string hashValue)
         {
             // Convert base64-encoded hash value into a byte array.
@@ -189,6 +311,8 @@ namespace ncaa_grad_info
             return (hashValue == expectedHashString);
         }
 
+
+        // Primary User Management
         // LOGIN Primary Menu
         public static User LoginMenu(User currentUser, List<List<string>> confLists, string[] settings)
         {
@@ -324,126 +448,6 @@ namespace ncaa_grad_info
                     return currentUser;
                 }
             }
-        }
-
-        // Registration and Update function
-        public static List<string> GetRegInfo(List<List<string>> confLists, string[] settings)
-        {
-            string nameFirst = "";
-            int name1Repeat = 1;
-            while (name1Repeat == 1)
-            {
-                Console.WriteLine("Enter Your First Name: ");
-                nameFirst = Console.ReadLine();
-                if (nameFirst == "" || !(System.Text.RegularExpressions.Regex.IsMatch(nameFirst, @"^[a-zA-Z0-9\n\r]+$")))
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine("You must use Letters and/or Numbers, only!");
-                    Console.WriteLine("Press Any Key To Continue!");
-                    Console.ReadKey();
-                    name1Repeat = 1;
-                }
-                else
-                {
-                    name1Repeat = 0;
-                }
-            }
-
-            string nameLast = "";
-            int name2Repeat = 1;
-            while (name2Repeat == 1)
-            {
-                Console.WriteLine("");
-                Console.WriteLine("Enter Your Last Name: ");
-                nameLast = Console.ReadLine();
-                if (nameLast == "" || !(System.Text.RegularExpressions.Regex.IsMatch(nameLast, @"^[a-zA-Z0-9\n\r]+$")))
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine("You must use Letters and/or Numbers, only!");
-                    Console.WriteLine("Press Any Key To Continue!");
-                    Console.ReadKey();
-                    name2Repeat = 1;
-                }
-                else
-                {
-                    name2Repeat = 0;
-                }
-
-            }
-
-            string pswd = "";
-            int nomatch = 1;
-            while (nomatch == 1)
-            {
-                int pswdRepeat = 1;
-                while (pswdRepeat == 1)
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine("Enter a Password (no echo): ");
-                    pswd = PSWDBlank();
-
-                    if (pswd == "" || !(System.Text.RegularExpressions.Regex.IsMatch(pswd, @"^[a-zA-Z0-9\n\r]+$")))
-                    {
-                        Console.WriteLine("");
-                        Console.WriteLine("You must use Letters and/or Numbers, only!");
-                        Console.WriteLine("Press Any Key To Continue!");
-                        Console.ReadKey();
-                        pswdRepeat = 1;
-                    }
-                    else
-                    {
-                        pswdRepeat = 0;
-                    }
-                }
-                Console.WriteLine("");
-                Console.WriteLine("Please, Confirm Your Password (no echo): ");
-                string pswdConfirm = PSWDBlank();
-                if (pswd == pswdConfirm)
-                {
-                    nomatch = 0;
-                }
-                else
-                {
-                    Console.WriteLine("Passwords do not match. Try again.");
-                    Console.WriteLine("Press any key to continue.");
-                    Console.ReadKey();
-                    nomatch = 1;
-                }
-
-            }
-            int parseInt = Int32.Parse(settings[2]);
-            var saltBytes = new byte[parseInt];
-            pswd = ComputeHash(pswd, settings, saltBytes);
-
-            string ffc = "";
-            int ffcRepeat = 1;
-            while (ffcRepeat == 1)
-            {
-                ffc = Program.GetConf(5, confLists);
-                if (ffc == "0")
-                { continue; }
-                else
-                { ffcRepeat = 0; }
-            }
-
-            string fpc = "";
-            int fpcRepeat = 1;
-            while (fpcRepeat == 1)
-            {
-                fpc = Program.GetConf(4, confLists);
-                if (fpc == "0")
-                { continue; }
-                else
-                { fpcRepeat = 0; }
-            }
-
-            List<string> RegInfo = new List<string>();
-            RegInfo.Add(nameFirst);
-            RegInfo.Add(nameLast);
-            RegInfo.Add(pswd);
-            RegInfo.Add(ffc);
-            RegInfo.Add(fpc);
-            return RegInfo;
         }
 
         // Register a new user
