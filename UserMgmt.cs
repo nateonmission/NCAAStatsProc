@@ -557,7 +557,7 @@ namespace ncaa_grad_info
                 using (SQLiteConnection sqlite_conn = new SQLiteConnection(settings[0]))
                 {
                     sqlite_conn.Open();
-                    sql = "UPDATE users SET NameFirst= @nameFirst, NameLast= @nameLast, PSWDHash= @pswd, FavFootballConf= @ffc, FavPrimaryConf= @fpc WHERE username= @currentUser ;";
+                    //sql = "UPDATE users SET NameFirst= @nameFirst, NameLast= @nameLast, PSWDHash= @pswd, FavFootballConf= @ffc, FavPrimaryConf= @fpc WHERE username= @currentUser ;";
                     using (SQLiteCommand editUser = new SQLiteCommand(sql, sqlite_conn))
                     {
                         editUser.Parameters.AddWithValue("@nameFirst", editInfo[0]);
