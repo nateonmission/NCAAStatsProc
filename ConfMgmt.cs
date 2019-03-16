@@ -577,6 +577,5 @@ namespace ncaa_grad_info
 
         }
 
-
     }
 }

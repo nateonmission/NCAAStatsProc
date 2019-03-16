@@ -12,7 +12,7 @@ namespace ncaa_grad_info
         // REGISTRATION
 
         //Reg. tool-funtions
-        // Registration and Update function
+        // Obtains comonly used info from user
         public static List<string> GetRegInfo(List<List<string>> confLists, string[] settings)
         {
             string nameFirst = "";
@@ -633,8 +633,6 @@ namespace ncaa_grad_info
                 return currentUser;
             }
         }
-
-
 
     }
 }
