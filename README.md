@@ -22,6 +22,9 @@ If a user already has a username, they may login using their existing user accou
 8. SKIPPED
 9. _Quit_ - allows the user to exit out of the program.
 
+## Features & Requirements
+The user registration actions contain all four C.R.U.D. functions, storing this data in user.db. It also instantiates a User object. During the function of the program, College objects are instantiated by reading a CSV. Those College objects' data are used to instantiate a Conference object, containing summed and averaged fields. The Conference object is then saved as a JSON file.
+
 ## Dependenacies
 This C# application makes use of SQLite, LINQ, and its ADO.net provider for the user registration and statistical functions.
 It also uses Newtonsoft's JSON functionality to write the aggregated data to a new file.
