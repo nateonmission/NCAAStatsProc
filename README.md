@@ -14,8 +14,8 @@ If a user already has a username, they may login using their existing user accou
 ### Main Menu
 1. _Display Individual School Stats by Football Conference_ - Displays a list of NCAA FOOTBALL conferences. The user then selects one and the a Conference object is instantiated that will contain the totals and averages derived from the school-level data. It will then save a JSON file containing the results.
 2. _Display Individual School Stats by Primary Conference_ - Displays a list of NCAA PRIMARY conferences. The user then selects one and the a Conference object is instantiated that will contain the totals and averages derived from the school-level data. It will then save a JSON file containing the results.
-3. _Display Favorite Football Conference_ - The same functionality as number 1 except it process the user's favorite FOOTBALL conference.
-4. _Display Favorite Primary Conference_ - The same functionality as number 2 except it process the user's favorite PRIMARY conference.
+3. _Display Favorite Football Conference_ - The same functionality as number 1 except it process the user's favorite football conference.
+4. _Display Favorite Primary Conference_ - The same functionality as number 2 except it process the user's favorite primary conference.
 5. SKIPPED
 6. _Edit Profile_ - allows the user to edit their profile. Username cannot be changed, as it is the primary key of the user.db file.
 7. _Delete Profile_ - allows the user to delete their profile and dumps them out at the login menu.
